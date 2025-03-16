@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to <%= name %>
+        </h1>
+    </header>
+    <main>
+        <section>
+            <ul>
+                <% for(let i=0; i < 5; i++) { %>
+                    <li>
+                        <div class="card">
+                            <h3>Card <%= i + 1 %>
+                            </h3>
+                            <p>Card Description</p>
+                        </div>
+                    </li>
+                    <% } %>
+            </ul>
+            <h2>Join the Fun!</h2>
+            <p>Play the classic card game UNO with friends and family.</p>
+            <a href="/game" class="btn">Start Game</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 The Gamblers. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

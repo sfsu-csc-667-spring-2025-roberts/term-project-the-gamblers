@@ -1,5 +1,6 @@
 import express from "express";
 import rootRouter from "./routes/root.js";
+import testRouter from "./routes/test.js";
 import httpErrors from "http-errors";
 import timeMiddleware from "./middleware/time.js";
 import * as path from "path";
@@ -23,7 +24,7 @@ app.set("views", path.join(process.cwd(), "src", "server", "views"));
 app.set("view engine", "ejs");
 
 app.use("/", rootRouter);
-app.use("/test", rootRouter);
+app.use("/test", testRouter);
 
 app.use((_, _res, next) => {
   next(httpErrors(404));

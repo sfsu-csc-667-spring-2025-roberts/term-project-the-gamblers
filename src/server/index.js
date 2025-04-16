@@ -5,6 +5,9 @@ import timeMiddleware from "./middleware/time.js";
 import * as path from "path";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

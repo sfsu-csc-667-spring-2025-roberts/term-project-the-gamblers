@@ -12,7 +12,10 @@ router.post("/register", async (req, res) => {
 
     try{
         const userId = await User.register(username, email, password);
-        res.json({ userId });
+
+        req.session.userId = userId; // Store user ID in session
+        res.redirect("/lobby"); // Redirect to lobby page after successful registration
+
     } catch (error) {
         res.render("auth/register", { error: "Failed to register" });
     }
@@ -28,15 +31,24 @@ router.post("/login", async (req, res) => {
 
     try {
         const userId = await User.login(email, password);
-        res.json({ userId });
+        req.session.userId = userId; // Store user ID in session
+        res.redirect("/lobby"); // Redirect to lobby page after successful log in
     } catch (error) {
         console.error("Failed to login:", error);
-        res.render("auth/login", { error: "Failed to login" });
+        res.render("/auth/login", { error: "Failed to login" });
     }
 
 });
 
-router.get("/logout", (req, res) => { });
+router.get("/logout", (req, res) => { 
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Failed to destroy session:", err);
+            return res.status(500).send("Failed to log out");
+        }
+        res.redirect("/"); // Redirect to login page after successful log out
+    });
+});
 
 
 export default router;

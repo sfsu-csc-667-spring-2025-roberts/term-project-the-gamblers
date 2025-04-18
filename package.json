@@ -12,7 +12,8 @@
     "prepare": "husky && husky install",
     "migrate": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "migrate:make": "knex migrate:make"
+    "migrate:make": "knex migrate:make",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

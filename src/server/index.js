@@ -10,11 +10,13 @@ import dotenv from "dotenv";
 import favicon from "serve-favicon";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import setupSession from "./middleware/session.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { root, test, auth } from "./routes/index.js";
+import { root, test, auth, lobby} from "./routes/index.js";
+import sessionMiddleware from "./middle/auth.js";
 
 
 dotenv.config();
@@ -34,6 +36,8 @@ if (process.env.NODE_ENV !== "production") {
 
     app.use(connectLivereload());
 }
+
+setupSession(app);
 
 
 const PORT = process.env.PORT || 3000;
@@ -57,6 +61,7 @@ app.set("view engine", "ejs");
 app.use("/", root);
 app.use("/test", test);
 app.use("/auth", auth);
+app.use("/lobby",sessionMiddleware, lobby);
 
 app.use((_, _res, next) => {
   next(httpErrors(404));

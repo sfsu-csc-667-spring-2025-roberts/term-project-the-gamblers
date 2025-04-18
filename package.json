@@ -10,9 +10,9 @@
     "frontend": "webpack --config webpack.config.js",
     "frontend:dev": "webpack --config webpack.config.js --mode development --watch",
     "prepare": "husky && husky install",
-    "migrate": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
-    "migrate:make": "knex migrate:make",
+    "db:rollback": "node-pg-migrate down -j js",
+    "db:create": "node-pg-migrate create",
+    "db:migrate": "node-pg-migrate up -j js",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -57,6 +57,7 @@
     "husky": "^8.0.0",
     "lint-staged": "^15.5.1",
     "livereload": "^0.9.3",
+    "node-pg-migrate": "^7.9.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "webpack": "^5.99.5",

@@ -1,12 +1,71 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: rgb(207, 188, 188);
+    margin: 0;
+    font-family: 'Segoe UI;', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ff4136, #ffdc00, #2ecc40, #0074d9);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;;
 }
 
-header {
-    background-color: rgb(69, 155, 230);
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 100% 0%; }
+    75% { background-position: 0% 0%; }
+    100% { background-position: 0% 50%; }
+}
+
+header, footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 4rem;
+    text-shadow: 2px 2px 5px #000;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
 }
 
 main {
-    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
 }
+
+section {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 1rem;
+    width: 80%;
+    backdrop-filter: blur(5px);
+}
+
+
+
+/*
+.button {
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+    margin: 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+}
+*/
+
+

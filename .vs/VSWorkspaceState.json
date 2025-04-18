@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\migrations",
+    "\\public",
+    "\\public\\styles",
+    "\\src",
+    "\\src\\client",
+    "\\src\\db",
+    "\\src\\server",
+    "\\src\\server\\routes",
+    "\\src\\server\\views",
+    "\\src\\server\\views\\auth"
+  ],
+  "SelectedNode": "\\src",
+  "PreviewInSolutionExplorer": false
+}

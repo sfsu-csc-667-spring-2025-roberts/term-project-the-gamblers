@@ -27,4 +27,5 @@ const setupSession = (app) => {
     return middleware;
 };
 
+export { middleware as sessionMiddleware };
 export default setupSession ;

@@ -1,5 +1,7 @@
 import express from "express";
 import httpErrors from "http-errors";
+import { Server } from "socket.io";
+import { createServer } from "http";
 import timeMiddleware from "./middleware/time.js";
 import * as path from "path";
 import morgan from "morgan";
@@ -11,6 +13,7 @@ import favicon from "serve-favicon";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import setupSession from "./middleware/session.js";
+import initSocketIO from "./socket.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -67,6 +70,11 @@ app.use((_, _res, next) => {
   next(httpErrors(404));
 });
 
-app.listen(PORT, () => {
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+
+initSocketIO(io);
+
+httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

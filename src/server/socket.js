@@ -1,23 +1,23 @@
 import { sessionMiddleware } from "../server/middleware/session.js";
 
 export default function initSocketIO(io) {
-    io.use((socket, next) => {
-      sessionMiddleware(socket.request, {}, next);
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
+
+  io.on("connection", (socket) => {
+    const session = socket.request.session;
+    const username = session?.username || "anonymous";
+
+    console.log(`User connected: ${socket.id} as ${username}`);
+
+    socket.on("chat message", (msg) => {
+      console.log(`${username} says: ${msg}`);
+      io.emit("chat message", `${username}: ${msg}`);
     });
-  
-    io.on("connection", (socket) => {
-      const session = socket.request.session;
-      console.log("User connected:", socket.id);
-      console.log("Session data:", session.id);
-  
-      socket.on("chat message", (msg) => {
-        const username = session?.user?.username || "anonymous";
-        console.log(`${username} says: ${msg}`);
-        io.emit("chat message", `${username}: ${msg}`);
-      });
-  
-      socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-      });
+
+    socket.on("disconnect", () => {
+      console.log(`User disconnected: ${socket.id}`);
     });
-  }
+  });
+}

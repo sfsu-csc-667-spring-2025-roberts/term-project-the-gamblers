@@ -11,11 +11,11 @@ export const shorthands = undefined;
 export const up = (pgm) => {
   pgm.createTable("player_hands", {
     hand_id: {
-      type: "char(36)",
+      type: "serial",
       primaryKey: true,
     },
     game_player_id: {
-      type: "char(36)",
+      type: "serial",
       notNull: true,
       references: "game_players(game_player_id)",
     },

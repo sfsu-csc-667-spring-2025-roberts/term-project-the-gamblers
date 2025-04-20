@@ -11,13 +11,13 @@ export const shorthands = undefined;
 export const up = (pgm) => {
   pgm.createTable("sessions", {
     session_id: {
-      type: "char(36)",
+      type: "serial",
       primaryKey: true,
     },
     user_id: {
-      type: "char(36)",
+      type: "serial",
       notNull: true,
-      references: "users(user_id)",
+      references: "users(id)",
     },
     token: {
       type: "text",

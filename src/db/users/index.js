@@ -7,19 +7,22 @@ const register = async (username, email, password) => {
 
     try {
         const result = await db.query(
-            "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id",
+            "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username",
             [username, email, encryptedPassword]
         );
-        const { id } = result.rows[0];
-        return id;
+        return result.rows[0];
     } catch (error) {
         console.error("Error registering user:", error);
         throw new Error("User registration failed");
     }
-};;
+};
 
 const login = async (email, password) => {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+    const result = await db.query("SELECT id, username, password FROM users WHERE email = $1", [email]);
+
+    if (result.rows.length === 0) {
+        throw new Error("User not found");
+    }
 
     const user = result.rows[0];
 
@@ -27,8 +30,11 @@ const login = async (email, password) => {
     if (!passwordsMatch) {
         throw new Error("Failed to Login");
     }
-    return user.id;
-        
+
+    return {
+        id: user.id,
+        username: user.username
+    };
 };
 
-export default {register, login};
+export default { register, login };

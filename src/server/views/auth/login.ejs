@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title></title>
-    <%- include ('../shared/head') %>
+    <title>UNO Online - Login</title>
+    <%- include('../shared/head') %>
+        <link rel="stylesheet" href="/css/login.css">
 </head>
-<body><%- include ('../shared/header') %>
-    <h1>Login</h1>
-    <% if(error !== undefined) { %>
-        <div class="error">
-            <p><%= error %></p>
+
+<body>
+    <%- include('../shared/header') %>
+
+        <div class="container">
+            <div class="login-card">
+                <div class="card-header">
+                    <h1>Login to UNO Online</h1>
+                </div>
+
+                <form action="/auth/login" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+
+                <div class="register-link">
+                    Don't have an account? <a href="/auth/register">Register</a>
+                </div>
+            </div>
         </div>
-    <% } %>
-    <form action="/auth/login" method="POST">
-        <div>
-            <label for="email">Email:</label>
-            <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            required 
-            placeholder="Enter your email"
-            />
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            required 
-            />
-        </div>
-        <button type="submit">Register</button>
-    </form>
 </body>
+
 </html>

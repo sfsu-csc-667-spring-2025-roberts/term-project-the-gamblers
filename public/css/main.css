@@ -9,18 +9,34 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;;
+    height: 100vh;
+    ;
 }
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 100% 50%; }
-    50% { background-position: 100% 0%; }
-    75% { background-position: 0% 0%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 100% 50%;
+    }
+
+    50% {
+        background-position: 100% 0%;
+    }
+
+    75% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
-header, footer {
+header,
+footer {
     text-align: center;
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.5);
@@ -42,7 +58,7 @@ main {
     padding: 2rem;
 }
 
-section {
+/* section {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 2rem;
@@ -50,7 +66,7 @@ section {
     margin: 1rem;
     width: 80%;
     backdrop-filter: blur(5px);
-}
+} */
 
 
 
@@ -67,5 +83,3 @@ section {
     font-weight: bold;
 }
 */
-
-

@@ -22,14 +22,18 @@ const login = async (email, password) => {
   const result = await db.query("SELECT * FROM users WHERE email = $1", [
     email,
   ]);
-
   const user = result.rows[0];
 
-  const passwordsMatch = await bcrypt.compare(password, user.password);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const passwordsMatch = await bcrypt.compare(password, user.password_hash);
   if (!passwordsMatch) {
     throw new Error("Failed to Login");
   }
-  return user.id;
+
+  return user; // return the full user object
 };
 
 export default { register, login };

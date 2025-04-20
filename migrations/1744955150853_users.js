@@ -10,8 +10,8 @@ export const shorthands = undefined;
  */
 export const up = (pgm) => {
   pgm.createTable("users", {
-    user_id: {
-      type: "char(36)",
+    id: {
+      type: "serial",
       primaryKey: true,
       notNull: true,
     },
@@ -25,7 +25,7 @@ export const up = (pgm) => {
       notNull: true,
       unique: true,
     },
-    password_hash: {
+    password: {
       type: "text",
       notNull: true,
     },

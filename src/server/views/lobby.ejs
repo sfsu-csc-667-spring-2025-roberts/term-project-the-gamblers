@@ -1,10 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <%- include('shared/head.ejs') %>
-        <title>Lobby</title>
-    </head>
-    <body>
-        <h1>Hello user <%= userId %></h1>
-    </body>
+
+<head>
+    <%- include('shared/head.ejs') %>
+        <title>UNO Online - Lobby</title>
+        <link rel="stylesheet" href="/css/lobby.css">
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">UNO ONLINE </div>
+        <div class="user-info"> Welcome, <%= username %>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-card">
+                <div class="avatar">
+                    <!-- You can replace this with user's avatar if available -->
+                    <div class="avatar-placeholder"></div>
+                </div>
+                <h2>
+                    <%= username %>
+                </h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Wins</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Games</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="menu">
+                <a href="#" class="active">Lobby</a>
+                <a href="#">My Games</a>
+                <a href="#">Leaderboard</a>
+                <a href="#">Settings</a>
+                <a href="/auth/logout">Logout</a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="section-header">
+                <h1>Game Lobby</h1>
+                <button class="create-game-btn">Create New Game</button>
+            </div>
+
+            <div class="games-list">
+                <div class="list-header">
+                    <h3>Available Games</h3>
+                    <div class="filter-controls">
+                        <select>
+                            <option>All Games</option>
+                            <option>Public Games</option>
+                            <option>Private Games</option>
+                        </select>
+                        <button class="refresh-btn">Refresh</button>
+                    </div>
+                </div>
+
+                <div class="game-cards">
+                    <!-- Example game cards - these would be dynamically generated -->
+                    <div class="game-card">
+                        <div class="game-name">Fun Game #1</div>
+                        <div class="game-info">
+                            <span class="players">2/4 Players</span>
+                            <span class="status">Waiting</span>
+                        </div>
+                        <button class="join-btn">Join Game</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-name">UNO Champions</div>
+                        <div class="game-info">
+                            <span class="players">1/4 Players</span>
+                            <span class="status">Waiting</span>
+                        </div>
+                        <button class="join-btn">Join Game</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-name">Card Masters</div>
+                        <div class="game-info">
+                            <span class="players">3/4 Players</span>
+                            <span class="status">Waiting</span>
+                        </div>
+                        <button class="join-btn">Join Game</button>
+                    </div>
+
+                    <div class="game-card in-progress">
+                        <div class="game-name">Quick Match</div>
+                        <div class="game-info">
+                            <span class="players">4/4 Players</span>
+                            <span class="status">In Progress</span>
+                        </div>
+                        <button class="join-btn" disabled>Join Game</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="online-players">
+                <h3>Online Players</h3>
+                <div class="players-count">12 Players Online</div>
+                <div class="players-list">
+                    <div class="player">Player1</div>
+                    <div class="player">CardMaster99</div>
+                    <div class="player">UnoChamp</div>
+                    <div class="player">DrawFour</div>
+                    <div class="player">WildCard</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>

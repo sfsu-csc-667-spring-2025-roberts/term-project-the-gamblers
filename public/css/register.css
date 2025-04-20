@@ -1,0 +1,120 @@
+/* UNO Registration Page Styles */
+body {
+  font-family: "Fredoka One", "Comic Sans MS", sans-serif;
+  background: linear-gradient(135deg, #0078d7, #004a8c);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+.register-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #ff4500;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+.card-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+form {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+.register-btn {
+  background-color: #ffcc00;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+  background-color: #ffd700;
+}
+
+.error-message {
+  background-color: #ffe6e6;
+  border-left: 4px solid #ff4d4d;
+  color: #cc0000;
+  padding: 10px 15px;
+  margin: 15px 20px 0;
+}
+
+.login-link {
+  text-align: center;
+  padding: 0 20px 20px;
+  color: #555;
+}
+
+.login-link a {
+  color: #0078d7;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* For smaller screens */
+@media (max-width: 500px) {
+  .container {
+    padding: 10px;
+  }
+
+  .card-header h1 {
+    font-size: 1.5rem;
+  }
+}

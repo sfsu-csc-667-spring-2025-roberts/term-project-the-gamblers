@@ -1,32 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title></title>
-    <%- include ('../shared/head') %>
+    <title>UNO Online - Register</title>
+    <%- include('../shared/head') %>
+        <link rel="stylesheet" href="/css/register.css">
 </head>
+
 <body>
-    <%- include ('../shared/header') %>
-    <h1>Register</h1>
-    <% if(error !== undefined) { %>
-        <div class="error">
-            <p><%= error %></p>
+    <%- include('../shared/header') %>
+
+        <div class="container">
+            <div class="register-card">
+                <div class="card-header">
+                    <h1>Register for UNO Online</h1>
+                </div>
+
+                <% if(error !==undefined) { %>
+                    <div class="error-message">
+                        <p>
+                            <%= error %>
+                        </p>
+                    </div>
+                    <% } %>
+
+                        <form action="/auth/register" method="POST">
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" name="username" required
+                                    placeholder="Choose a username">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" required
+                                    placeholder="Create a password">
+                            </div>
+
+                            <button type="submit" class="register-btn">Register</button>
+                        </form>
+
+                        <div class="login-link">
+                            Already have an account? <a href="/auth/login">Log in</a>
+                        </div>
+            </div>
         </div>
-    <% } %>
-    <form action="/auth/register" method="POST">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required placeholder="Enter your email"/>
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required />
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Register</button>
-        
-    </form>
 </body>
+
 </html>

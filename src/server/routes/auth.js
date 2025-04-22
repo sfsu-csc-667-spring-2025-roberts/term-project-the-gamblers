@@ -12,8 +12,8 @@ router.post("/register", async (req, res) => {
 
   try {
     const user = await User.register(username, email, password);
-    req.session.userId = user.id;
-    req.session.username = user.username;
+    //req.session.userId = user.id;
+    //req.session.username = user.username;
     res.redirect("/lobby");
   } catch (error) {
     console.error("Failed to register:", error);
@@ -30,8 +30,8 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await User.login(email, password);
-    req.session.userId = user.user_id;
-    req.session.username = user.username;
+    //req.session.userId = user.user_id;
+    //req.session.username = user.username;
     res.redirect("/lobby");
   } catch (error) {
     console.error("Failed to login:", error);

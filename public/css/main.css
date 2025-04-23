@@ -1,4 +1,4 @@
-body {
+/* body {
   margin: 0;
   font-family: "Segoe UI;", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #ff4136, #ffdc00, #2ecc40, #0074d9);
@@ -10,7 +10,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-}
+} */
 
 @keyframes gradientShift {
   0% {

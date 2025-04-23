@@ -1,0 +1,383 @@
+/* UNO Landing Page Styles */
+:root {
+    --primary-color: #ff4500;
+    --secondary-color: #ffcc00;
+    --accent-color: #0078d7;
+    --background-color: #004a8c;
+    --text-color: #333;
+    --light-text: #fff;
+    --card-1: #ff4500;
+    /* Red */
+    --card-2: #0078d7;
+    /* Blue */
+    --card-3: #4caf50;
+    /* Green */
+    --card-4: #ffcc00;
+    /* Yellow */
+    --card-5: #9c27b0;
+    /* Purple */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fredoka One', 'Comic Sans MS', sans-serif;
+    background: linear-gradient(135deg, #0078d7, #004a8c);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.main-nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: var(--secondary-color);
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.login-btn {
+    background-color: transparent;
+    border: 2px solid var(--light-text);
+    color: var(--light-text);
+}
+
+.login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.register-btn,
+.cta-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+}
+
+.register-btn:hover,
+.cta-btn:hover {
+    background-color: #ffd700;
+    transform: translateY(-2px);
+}
+
+.cta-btn {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    color: var(--light-text);
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* Cards Showcase */
+.card-showcase {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.card-showcase h2 {
+    color: var(--light-text);
+    margin-bottom: 40px;
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    list-style: none;
+}
+
+.feature-card {
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: transform 0.3s ease;
+    color: var(--light-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.card-1 {
+    background-color: var(--card-1);
+}
+
+.card-2 {
+    background-color: var(--card-2);
+}
+
+.card-3 {
+    background-color: var(--card-3);
+}
+
+.card-4 {
+    background-color: var(--card-4);
+    color: var(--text-color);
+}
+
+.card-5 {
+    background-color: var(--card-5);
+}
+
+.card-content {
+    padding: 20px;
+    text-align: center;
+    z-index: 2;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* About Section */
+.about {
+    background-color: white;
+    padding: 80px 20px;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.about p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+/* How to Play Section */
+.how-to-play {
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--light-text);
+}
+
+.how-to-play h2 {
+    margin-bottom: 40px;
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.step {
+    background-color: white;
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+    position: relative;
+}
+
+.step-number {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0 auto 15px;
+}
+
+.step h3 {
+    margin-bottom: 10px;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 80px 20px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--light-text);
+}
+
+.cta-section h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.cta-section p {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+/* Footer */
+footer {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--light-text);
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-links {
+    margin-bottom: 20px;
+}
+
+.footer-links a {
+    color: var(--light-text);
+    text-decoration: none;
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--secondary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .main-nav ul {
+        gap: 15px;
+    }
+
+    .hero {
+        padding: 60px 20px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .steps {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .step {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

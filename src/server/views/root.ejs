@@ -8,34 +8,117 @@
         <%= title %>
     </title>
     <script src="/js/main.js" defer></script>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/landing.css">
+    <!-- <link rel="stylesheet" href="/css/main.css"> -->
 </head>
 
 <body>
     <header>
-        <h1>Welcome to <%= name %>
-        </h1>
+        <div class="header-container">
+            <h1 class="game-title">
+                <%= name %>
+            </h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-to-play">How to Play</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="/auth/login" class="btn login-btn">Login</a>
+                <a href="/auth/register" class="btn register-btn">Register</a>
+            </div>
+        </div>
     </header>
+
     <main>
-        <section>
-            <ul>
-                <% for(let i=0; i < 5; i++) { %>
-                    <li>
-                        <div class="card">
-                            <h3>Card <%= i + 1 %>
-                            </h3>
-                            <p>Card Description</p>
-                        </div>
-                    </li>
-                    <% } %>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Play UNO Online with Friends!</h2>
+                <p>Experience the classic card game in a fun digital format.</p>
+                <a href="/auth/register" class="btn cta-btn">Join Now</a>
+            </div>
+        </section>
+
+        <section id="features" class="card-showcase">
+            <h2>Game Features</h2>
+            <ul class="card-grid">
+                <% const features=[ { title: "Play Anywhere" , desc: "Enjoy UNO on any device with internet access" }, {
+                    title: "Multiplayer Fun" , desc: "Play with friends or find new opponents online" }, {
+                    title: "Classic Rules" , desc: "Experience the authentic UNO gameplay you love" }, {
+                    title: "Custom Games" , desc: "Create games with your preferred rules and settings" }, {
+                    title: "Leaderboards" , desc: "Compete with others and climb the rankings" } ] %>
+
+                    <% for(let i=0; i < features.length; i++) { %>
+                        <li>
+                            <div class="feature-card card-<%= i + 1 %>">
+                                <div class="card-content">
+                                    <h3>
+                                        <%= features[i].title %>
+                                    </h3>
+                                    <p>
+                                        <%= features[i].desc %>
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                        <% } %>
             </ul>
-            <h2>Join the Fun!</h2>
-            <p>Play the classic card game UNO with friends and family.</p>
-            
+        </section>
+
+        <section id="about" class="about">
+            <div class="about-content">
+                <h2>About UNO Online</h2>
+                <p>UNO Online brings the excitement of the classic card game to your digital devices. Whether you're
+                    looking to play with friends across the globe or challenge new opponents, our platform offers a fun
+                    and engaging UNO experience for players of all skill levels.</p>
+                <p>With familiar rules and colorful cards, you'll feel right at home in our digital UNO world!</p>
+            </div>
+        </section>
+
+        <section id="how-to-play" class="how-to-play">
+            <h2>How to Play</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create an Account</h3>
+                    <p>Sign up in seconds to access all game features</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Join or Create a Game</h3>
+                    <p>Find an active game or start your own</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Play Your Cards</h3>
+                    <p>Match colors or numbers and be the first to use all your cards</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Win and Celebrate</h3>
+                    <p>Score points and climb the leaderboard</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Ready to Play?</h2>
+            <p>Join thousands of players already enjoying UNO Online!</p>
+            <a href="/auth/register" class="btn cta-btn">Get Started</a>
         </section>
     </main>
+
     <footer>
-        <p>&copy; 2025 The Gamblers. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+                <a href="/contact">Contact Us</a>
+            </div>
+            <p>&copy; 2025 The Gamblers. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 

@@ -5,6 +5,8 @@
   <%- include('shared/head.ejs') %>
     <title>UNO Online - Lobby</title>
     <script src="/js/lobby.js" defer></script>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/js/chat.js" defer></script>
     <link rel="stylesheet" href="/css/lobby.css">
     <style>
       .chat-section {
@@ -178,8 +180,6 @@
   <script>
     window.username = "<%= username %>";
   </script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/chat.js"></script>
   <%- include('games/create-game-form.ejs') %>
 </body>
 

@@ -4,11 +4,10 @@
 
 .container {
   min-height: 100vh;
+  min-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 500px;
-  margin: 0 auto;
   padding: 20px;
 }
 

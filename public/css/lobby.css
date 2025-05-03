@@ -1,12 +1,6 @@
 /* UNO Lobby Page Styles */
-body {
-  font-family: "Fredoka One", "Comic Sans MS", sans-serif;
-  background: linear-gradient(135deg, #0078d7, #004a8c);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  color: #333;
-}
+
+/* Remove general resets, body, .container, .btn, header, etc. */
 
 .header {
   background-color: #ff4500;

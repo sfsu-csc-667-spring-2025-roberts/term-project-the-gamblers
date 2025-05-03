@@ -4,6 +4,7 @@
 <head>
     <%- include('shared/head.ejs') %>
         <title>UNO Online - Lobby</title>
+        <script src="/js/lobby.js" defer></script>
         <link rel="stylesheet" href="/css/lobby.css">
         <style>
             .chat-section {
@@ -65,7 +66,6 @@
         <div class="sidebar">
             <div class="profile-card">
                 <div class="avatar">
-                    <!-- You can replace this with user's avatar if available -->
                     <div class="avatar-placeholder"></div>
                 </div>
                 <h2>
@@ -95,7 +95,7 @@
         <div class="main-content">
             <div class="section-header">
                 <h1>Game Lobby</h1>
-                <button class="create-game-btn">Create New Game</button>
+                <button class="create-game-btn" id="create-game-btn">Create New Game</button>
             </div>
 
             <div class="games-list">
@@ -112,7 +112,6 @@
                 </div>
 
                 <div class="game-cards">
-                    <!-- Example game cards - these would be dynamically generated -->
                     <div class="game-card">
                         <div class="game-name">Fun Game #1</div>
                         <div class="game-info">
@@ -203,6 +202,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         });
     </script>
+    <%- include('games/create-game-form.ejs') %>
 </body>
 
 </html>

@@ -24,3 +24,19 @@ socket.on("chat message", (data) => {
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 });
+
+const createGameButton = document.querySelector("#create-game-btn");
+const createGameForm = document.querySelector("#create-game-form");
+const cancelCreateGameButton = document.querySelector("#cancel-create-game");
+
+createGameButton?.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  createGameForm?.classList.add("visible");
+});
+
+cancelCreateGameButton?.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  createGameForm?.classList.remove("visible");
+});

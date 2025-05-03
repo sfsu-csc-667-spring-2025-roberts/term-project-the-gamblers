@@ -1,20 +1,6 @@
 /* UNO Registration Page Styles */
-body {
-  font-family: "Fredoka One", "Comic Sans MS", sans-serif;
-  background: linear-gradient(135deg, #0078d7, #004a8c);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.container {
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
-}
+/* Remove general resets, body, .container, .btn, header, etc. */
 
 .register-card {
   background-color: white;

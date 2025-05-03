@@ -1,7 +1,7 @@
 import express from "express";
 import {
   handleLobbyChat,
-  handleLobbyChat,
+  handleGameChat,
 } from "../controllers/ChatController.js";
 
 export default function chatRoutes(io) {

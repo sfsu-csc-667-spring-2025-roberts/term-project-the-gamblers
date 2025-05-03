@@ -3,7 +3,7 @@ export function handleLobbyChat(io) {
     const message = req.body.message;
     const username = req.session.username || "anonymous";
 
-    console.log("[Lobby Chat] ${username}: ${message}");
+    console.log(`[Lobby Chat] ${username}: ${message}`);
 
     io.emit("chat:lobby", { username, message });
     res.sendStatus(200);

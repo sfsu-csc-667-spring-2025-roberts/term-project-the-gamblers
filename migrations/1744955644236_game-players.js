@@ -15,19 +15,14 @@ export const up = (pgm) => {
       primaryKey: true,
     },
     game_id: {
-      type: "serial",
+      type: "integer",
       notNull: true,
       references: "games(game_id)",
     },
     user_id: {
-      type: "serial",
+      type: "integer",
       notNull: true,
       references: "users(id)",
-    },
-    joined_at: {
-      type: "timestamp",
-      notNull: true,
-      default: pgm.func("now()"),
     },
     turn_order: {
       type: "integer",
@@ -35,7 +30,7 @@ export const up = (pgm) => {
     },
     is_winner: {
       type: "boolean",
-      notNull: true,
+      notNull: false,
       default: false,
     },
   });

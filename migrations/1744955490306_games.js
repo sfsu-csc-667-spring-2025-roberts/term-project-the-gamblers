@@ -17,17 +17,21 @@ export const up = (pgm) => {
     created_at: {
       type: "timestamp",
       notNull: true,
-      default: pgm.func("now()"),
+      default: pgm.func("current_timestamp"),
     },
-    started_at: {
-      type: "timestamp",
-      notNull: false,
+    game_name: {
+      type: "varchar(50)",
+      notNull: true,
     },
-    ended_at: {
-      type: "timestamp",
-      notNull: false,
+    max_players: {
+      type: "integer",
+      notNull: true,
     },
-    status: {
+    visibility: {
+      type: "varchar(50)",
+      notNull: true,
+    },
+    password: {
       type: "varchar(50)",
       notNull: false,
     },

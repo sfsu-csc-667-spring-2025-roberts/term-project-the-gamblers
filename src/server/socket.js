@@ -11,11 +11,6 @@ export default function initSocketIO(io) {
 
     console.log(`User connected: ${socket.id} as ${username}`);
 
-    socket.on("chat message", (msg) => {
-      console.log(`${username} says: ${msg}`);
-      io.emit("chat message", `${username}: ${msg}`);
-    });
-
     socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.id}`);
     });

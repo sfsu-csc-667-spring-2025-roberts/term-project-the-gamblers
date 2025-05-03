@@ -175,34 +175,8 @@
         </div>
     </div>
 
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        if (!window.socket) {
-            window.socket = io();
-        }
-
-        const username = "<%= username %>";
-        const chatBox = document.getElementById("chat-box");
-        const form = document.getElementById("chat-form");
-        const input = document.getElementById("chat-message");
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const message = input.value.trim();
-            if (message) {
-                window.socket.emit("chat message", message);
-                input.value = "";
-            }
-        });
-
-        window.socket.on("chat message", (msg) => {
-            const msgDiv = document.createElement("div");
-            msgDiv.textContent = msg;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    </script>
-</body>
-
-</html>
+<script>
+    window.username = "<%= username %>";
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>

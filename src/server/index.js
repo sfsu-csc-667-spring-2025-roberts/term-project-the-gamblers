@@ -18,30 +18,28 @@ import initSocketIO from "./socket.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { root, test, auth, lobby} from "./routes/index.js";
+import { root, test, auth, lobby, chat } from "./routes/index.js";
 import sessionMiddleware from "./middle/auth.js";
-
 
 dotenv.config();
 const app = express();
 
 if (process.env.NODE_ENV !== "production") {
-    const liveReloadServer = livereload.createServer();
-    
-    liveReloadServer.watch(path.join(__dirname, "../public"));
+  const liveReloadServer = livereload.createServer();
 
-    liveReloadServer.watch(path.join(process.cwd(), "public", "js"));
-    liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-        liveReloadServer.refresh("/");
-      }, 100);
-    });
+  liveReloadServer.watch(path.join(__dirname, "../public"));
 
-    app.use(connectLivereload());
+  liveReloadServer.watch(path.join(process.cwd(), "public", "js"));
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+
+  app.use(connectLivereload());
 }
 
 setupSession(app);
-
 
 const PORT = process.env.PORT || 3000;
 
@@ -57,23 +55,24 @@ app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "favicon.ico"));
 });
 
-
 app.set("views", path.join(process.cwd(), "src", "server", "views"));
 app.set("view engine", "ejs");
 
 app.use("/", root);
 app.use("/test", test);
 app.use("/auth", auth);
-app.use("/lobby",sessionMiddleware, lobby);
-
-app.use((_, _res, next) => {
-  next(httpErrors(404));
-});
+app.use("/lobby", sessionMiddleware, lobby);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 initSocketIO(io);
+
+app.use("/chat", chat(io));
+
+app.use((_, _res, next) => {
+  next(httpErrors(404));
+});
 
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

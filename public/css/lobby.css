@@ -170,6 +170,9 @@
   border-radius: 12px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .list-header {
@@ -219,6 +222,9 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   width: 100%;
+  min-height: 120px;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .game-card {
@@ -312,6 +318,7 @@
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
+  min-height: 60px;
 }
 
 .player {
@@ -438,4 +445,11 @@
   .game-cards {
     grid-template-columns: 1fr;
   }
+}
+
+.empty-placeholder {
+  text-align: center;
+  color: #888;
+  padding: 40px 0;
+  font-size: 1.1rem;
 }

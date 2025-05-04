@@ -13,4 +13,9 @@ const createGame = async (gameName, maxPlayers, visibility, password, userId) =>
     return gameId;
 };
 
-export default { createGame };
+const getGames = async () => {
+    const games = await db.query("SELECT * FROM games WHERE visibility = 'public'");
+    return games.rows;
+};
+
+export default { createGame, getGames };

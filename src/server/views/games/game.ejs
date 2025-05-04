@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>UNO Online - Game Room <%= gameId %>
+    </title>
+    <%- include('../shared/head') %>
+        <link rel="stylesheet" href="/css/lobby.css">
+        <!-- Optionally add a game.css if you want custom styles for the game page -->
+</head>
+
+<body>
+    <%- include('../shared/header') %>
+        <div class="container">
+            <div class="main-content">
+                <div class="section-header">
+                    <h1>Game Room: <%= gameId %>
+                    </h1>
+                    <span class="user-info">Welcome, <%= username %>!</span>
+                </div>
+                <div class="game-area">
+                    <!-- Game UI goes here -->
+                    <div class="game-card"
+                        style="background: #fff; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); padding: 2em; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #888; font-size: 1.2em;">Game UI coming soon...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

@@ -35,6 +35,10 @@ export const up = (pgm) => {
       type: "varchar(50)",
       notNull: false,
     },
+    owner_id: {
+      type: "integer",
+      notNull: true,
+    },
   });
 };
 

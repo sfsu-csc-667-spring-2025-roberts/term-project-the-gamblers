@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/create", async (req, res) => {
     const userId = req.session.userId;
-    console.log(req.session.userId);
+    console.log("userId for the owner", userId);
     const { gameName, maxPlayers, visibility, password } = req.body;
 
     console.log(userId, gameName, maxPlayers, visibility, password);
@@ -27,9 +27,10 @@ router.post("/create", async (req, res) => {
 });
 
 router.get("/load-games", async (req, res) => {
+    const userId = req.session.userId;
     try {
         // Use the renamed gamesDb instead of games to avoid the naming conflict
-        const gamesList = await gamesDb.getGames();
+        const gamesList = await gamesDb.getGames(userId);
         console.log(gamesList);
         res.json(gamesList);
     } catch (error) {

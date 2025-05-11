@@ -219,12 +219,13 @@
 
 .game-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
   width: 100%;
   min-height: 120px;
   max-height: 350px;
   overflow-y: auto;
+  justify-items: start;
 }
 
 .game-card {
@@ -236,6 +237,7 @@
   transition: all 0.3s ease;
   border: 1px solid #eee;
   width: 100%;
+  max-width: 320px;
   box-sizing: border-box;
 }
 

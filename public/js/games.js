@@ -1,4 +1,3 @@
-
 document.getElementById("leave-game-btn").addEventListener("click", () => {
     console.log("leave game button clicked");
 
@@ -16,7 +15,13 @@ document.getElementById("leave-game-btn").addEventListener("click", () => {
     });
 });
 
-socket.on("gameClosed", () => {
+window.socket.on("gameClosed", () => {
     alert("The game has ended. Returning to lobby.");
     window.location.href = "/lobby";
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.gameId && window.socket) {
+        window.socket.emit("join-game", window.gameId);
+    }
 });

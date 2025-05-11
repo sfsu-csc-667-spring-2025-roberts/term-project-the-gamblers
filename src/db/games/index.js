@@ -20,9 +20,27 @@ const getGames = async (user_id) => {
     return games.rows;
 };
 
-const joinGame = async (game_id, user_id) => {
-    await db.query("INSERT INTO game_players (game_id, user_id) VALUES ($1, $2)",
-        [game_id, user_id]);
+const joinGame = async (game_id, user_id, password) => {
+    const CONDITIONALLY_JOIN_SQL = `
+    INSERT INTO game_players (game_id, user_id)
+    SELECT $1, $2
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM game_players
+        WHERE game_id = $1 AND user_id = $2
+    )
+    AND (
+        SELECT COUNT(*) FROM games WHERE game_id = $1 AND password = $3
+    ) = 1
+    AND (
+        (SELECT COUNT(*) FROM game_players WHERE game_id = $1) < (SELECT max_players FROM games WHERE game_id = $1)
+    )
+    RETURNING (
+        SELECT COUNT(*) FROM game_players WHERE game_id = $1
+    ) as count
+    `;
+    const result = await db.query(CONDITIONALLY_JOIN_SQL, [game_id, user_id, password]);
+    return result.rows[0] ? result.rows[0].count : null;
 };
 
 const getGameById = async (game_id) => {

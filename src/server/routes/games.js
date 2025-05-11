@@ -56,21 +56,32 @@ router.post("/:gameId/join", async (req, res) => {
             return res.status(401).json({ success: false, message: "You must be logged in to join a game" });
         }
 
-        // Fetch the game to check the password
+        // Fetch the game to check if it exists
         const game = await gamesDb.getGameById(gameId);
         if (!game) {
             return res.status(404).json({ success: false, message: "Game not found" });
         }
 
-        if (game.password) {
-            // If a password is set, check it
-            if (!password || password !== game.password) {
+        const joinResult = await gamesDb.joinGame(gameId, userId, password || '');
+        if (joinResult) {
+            return res.json({ success: true, message: "Joined game successfully" });
+        } else {
+            // Could be already joined, full, or wrong password
+            // Let's check which one
+            const alreadyJoined = await db.query("SELECT 1 FROM game_players WHERE game_id = $1 AND user_id = $2", [gameId, userId]);
+            if (alreadyJoined.rows.length > 0) {
+                return res.status(409).json({ success: false, message: "You have already joined this game" });
+            }
+            const playerCount = await db.query("SELECT COUNT(*) FROM game_players WHERE game_id = $1", [gameId]);
+            const maxPlayers = game.max_players;
+            if (parseInt(playerCount.rows[0].count) >= maxPlayers) {
+                return res.status(403).json({ success: false, message: "Game is full" });
+            }
+            if (game.password && (!password || password !== game.password)) {
                 return res.status(403).json({ success: false, message: "Incorrect password" });
             }
+            return res.status(400).json({ success: false, message: "Could not join game" });
         }
-
-        await gamesDb.joinGame(gameId, userId);
-        res.json({ success: true, message: "Joined game successfully" });
     } catch (error) {
         console.error("Error joining game:", error);
         res.status(500).json({ success: false, message: "Failed to join game" });

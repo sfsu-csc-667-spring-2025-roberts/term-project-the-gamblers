@@ -67,16 +67,22 @@ const loadGames = async (filter = 'All Games') => {
 };
 
 // Function to handle joining a game
-const joinGame = async (gameId) => {
+const joinGame = async (gameId, visibility) => {
   try {
     console.log(`Joining game with ID: ${gameId}`);
+    let password = undefined;
+    if (visibility === 'private') {
+      password = prompt('Enter the password for this private game:');
+      if (password === null) return; // User cancelled
+    }
 
     const response = await fetch(`/games/${gameId}/join`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'same-origin' // Include cookies for authentication
+      credentials: 'same-origin', // Include cookies for authentication
+      body: JSON.stringify(password ? { password } : {})
     });
 
     const data = await response.json();
@@ -98,7 +104,9 @@ const addJoinGameEventListeners = () => {
   document.querySelectorAll('.join-btn').forEach(button => {
     button.addEventListener('click', function () {
       const gameId = this.getAttribute('data-game-id');
-      joinGame(gameId);
+      // Find the visibility from the card
+      const visibility = this.closest('.game-card').querySelector('.status').textContent;
+      joinGame(gameId, visibility);
     });
   });
 };

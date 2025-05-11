@@ -50,15 +50,90 @@ router.post("/:gameId/join", async (req, res) => {
     try {
         const gameId = req.params.gameId;
         const userId = req.session.userId;
+        const { password } = req.body;
 
         if (!userId) {
             return res.status(401).json({ success: false, message: "You must be logged in to join a game" });
         }
 
+        // Fetch the game to check the password
+        const game = await gamesDb.getGameById(gameId);
+        if (!game) {
+            return res.status(404).json({ success: false, message: "Game not found" });
+        }
+
+        if (game.password) {
+            // If a password is set, check it
+            if (!password || password !== game.password) {
+                return res.status(403).json({ success: false, message: "Incorrect password" });
+            }
+        }
+
+        await gamesDb.joinGame(gameId, userId);
         res.json({ success: true, message: "Joined game successfully" });
     } catch (error) {
         console.error("Error joining game:", error);
         res.status(500).json({ success: false, message: "Failed to join game" });
+    }
+});
+
+router.post("/:gameId/delete", async (req, res) => {
+    const gameId = req.params.gameId;
+    const userId = req.session.userId;
+
+    if (!userId) {
+        return res.status(401).send("You must be logged in to delete a game.");
+    }
+
+    const game = await gamesDb.getGameById(gameId);
+    if (!game) {
+        return res.status(404).send("Game not found.");
+    }
+
+    if (game.owner_id !== userId) {
+        return res.status(403).send("You are not authorized to delete this game.");
+    }
+
+    try {
+        const deleted = await gamesDb.removeGame(gameId, userId);
+        if (!deleted) {
+            // Not the owner or game not found
+            return res.status(403).send("You are not authorized to delete this game.");
+        }
+        res.redirect("/lobby");
+    } catch (error) {
+        console.error("Error deleting game:", error);
+        res.status(500).send("Failed to delete game.");
+    }
+});
+
+router.post("/:gameId/leave", async (req, res) => {
+    const gameId = req.params.gameId;
+    const userId = req.session.userId;
+
+    console.log("leaving game", gameId, userId);
+    if (!userId) {
+        return res.status(401).send("You must be logged in to leave a game.");
+    }
+
+    try {
+        const game = await gamesDb.getGameById(gameId);
+        if (game && game.owner_id === userId) {
+            // If the owner is leaving, delete the game (and all players)
+            await gamesDb.removeGame(gameId, userId);
+            // Emit 'gameClosed' to all sockets in the game room
+            const io = req.app.get('io');
+            if (io) {
+                io.to(gameId).emit('gameClosed');
+            }
+        } else {
+            // Otherwise, just remove the player from the game
+            await gamesDb.leaveGame(gameId, userId);
+        }
+        res.redirect("/lobby");
+    } catch (error) {
+        console.error("Error leaving game:", error);
+        res.status(500).send("Failed to leave game.");
     }
 });
 

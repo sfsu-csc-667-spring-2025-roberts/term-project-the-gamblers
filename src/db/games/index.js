@@ -20,4 +20,27 @@ const getGames = async (user_id) => {
     return games.rows;
 };
 
-export default { createGame, getGames };
+const joinGame = async (game_id, user_id) => {
+    await db.query("INSERT INTO game_players (game_id, user_id) VALUES ($1, $2)",
+        [game_id, user_id]);
+};
+
+const getGameById = async (game_id) => {
+    const result = await db.query("SELECT * FROM games WHERE game_id = $1", [game_id]);
+    return result.rows[0];
+};
+
+const removeGame = async (game_id, user_id) => {
+    // Remove all players from the game first
+    await db.query("DELETE FROM game_players WHERE game_id = $1", [game_id]);
+    // Only delete if the user is the owner
+    const result = await db.query("DELETE FROM games WHERE game_id = $1 AND owner_id = $2", [game_id, user_id]);
+    return result.rowCount > 0; // true if deleted, false otherwise
+};
+
+const leaveGame = async (game_id, user_id) => {
+    const result = await db.query("DELETE FROM game_players WHERE game_id = $1 AND user_id = $2", [game_id, user_id]);
+    return result.rowCount > 0; // true if a player was removed, false otherwise
+};
+
+export default { createGame, getGames, joinGame, getGameById, removeGame, leaveGame };

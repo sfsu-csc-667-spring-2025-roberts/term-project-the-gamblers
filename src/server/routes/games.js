@@ -1,5 +1,6 @@
 import express from "express";
 
+
 // Import the games module with a different name to avoid conflicts
 import { games as gamesDb } from "../../db/index.js";
 
@@ -67,7 +68,6 @@ router.post("/:gameId/join", async (req, res) => {
             return res.json({ success: true, message: "Joined game successfully" });
         } else {
             // Could be already joined, full, or wrong password
-            // Let's check which one
             const alreadyJoined = await db.query("SELECT 1 FROM game_players WHERE game_id = $1 AND user_id = $2", [gameId, userId]);
             if (alreadyJoined.rows.length > 0) {
                 return res.status(409).json({ success: false, message: "You have already joined this game" });
@@ -132,11 +132,6 @@ router.post("/:gameId/leave", async (req, res) => {
         if (game && game.owner_id === userId) {
             // If the owner is leaving, delete the game (and all players)
             await gamesDb.removeGame(gameId, userId);
-            // Emit 'gameClosed' to all sockets in the game room
-            const io = req.app.get('io');
-            if (io) {
-                io.to(gameId).emit('gameClosed');
-            }
         } else {
             // Otherwise, just remove the player from the game
             await gamesDb.leaveGame(gameId, userId);

@@ -14,6 +14,15 @@ export default function initSocketIO(io) {
     socket.on("join-game", (gameId) => {
       socket.join(gameId);
       console.log(`Socket ${socket.id} joined room ${gameId}`);
+      io.to(gameId).emit("chat:game", {
+        username: "System",
+        message: `${username} has joined the game.`
+      });
+    });
+
+    socket.on("close-game", (gameId) => {
+      io.to(gameId).emit("gameClosed");
+      // Optionally, you can also remove all sockets from the room or perform cleanup here
     });
 
     socket.on("disconnect", () => {

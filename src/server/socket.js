@@ -1,4 +1,8 @@
 import { sessionMiddleware } from "../server/middleware/session.js";
+import { UNOGame, drawCard, playCard, checkUNO, callUNO } from "../server/logic/UNOgame.js";
+import db from "../db/connection.js";
+
+const activeGames = new Map(); // Map of gameId -> UNOGame instance
 
 export default function initSocketIO(io) {
   io.use((socket, next) => {
@@ -8,6 +12,7 @@ export default function initSocketIO(io) {
   io.on("connection", (socket) => {
     const session = socket.request.session;
     const username = session?.username || "anonymous";
+    const userId = session?.userId || socket.id; // Fallback if no session userId
 
     console.log(`User connected: ${socket.id} as ${username}`);
 
@@ -20,9 +25,100 @@ export default function initSocketIO(io) {
       });
     });
 
+    socket.on("start-game", async ({ gameId, playerIds }) => {
+      if (activeGames.has(gameId)) {
+        return socket.emit("error", { message: "Game already started" });
+      }
+
+      try {
+        const { rows: players } = await db.query(
+          "SELECT id, username FROM users WHERE id = ANY($1::int[])",
+          [playerIds]
+        );
+
+        const game = new UNOGame(gameId, players);
+        await game.initialize();
+
+        activeGames.set(gameId, game);
+        io.to(gameId).emit("gameStateUpdate", game);
+      } catch (error) {
+        console.error("Error starting game:", error);
+        socket.emit("error", { message: "Failed to start game." });
+      }
+    });
+
+    socket.on("join-game", (gameId) => {
+      const game = activeGames.get(gameId);
+      if(!game) return;
+      io.to(gameId).emit("game-state", game.getGameState());
+      socket.emit("player-state", game.getPlayerState(userId));
+    })
+
+    socket.on("play-card", ({ gameId, card, chosenColor }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+
+      const result = playCard(game, userId, card, chosenColor);
+      if (result?.success) {
+        io.to(gameId).emit("gameStateUpdate", game);
+      } else {
+        socket.emit("error", { message: "Invalid play." });
+      }
+    });
+
+    socket.on("draw-card", ({ gameId }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+
+      drawCard(game, userId);
+      io.to(gameId).emit("gameStateUpdate", game);
+    });
+
+    socket.on("choose-color", ({ gameId, color }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+
+      game.currentColor = color;
+      io.to(gameId).emit("gameStateUpdate", game);
+    });
+
+    socket.on("call-uno", ({ gameId }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+
+      const player = game.players.find(p => p.id === socket.id);
+      if (player) {
+        UNOGame.callUNO(player);
+        io.to(gameId).emit("gameStateUpdate", game);
+      }
+    });
+
+    socket.on("check-uno", ({ gameId }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+
+      const player = game.players.find(p => p.id === userId);
+      if (player) {
+        const penalty = checkUNO(game, player);
+        if (penalty) {
+          io.to(gameId).emit("chat:game", {
+            username: "System",
+            message: `${player.name} did not call UNO! Draw 2 cards!`,
+          });
+        }
+        io.to(gameId).emit("gameStateUpdate", game);
+      }
+    });
+
+    socket.on("get-game-state", ({ gameId }) => {
+      const game = activeGames.get(gameId);
+      if (!game) return;
+      socket.emit("gameStateUpdate", game);
+    });
+
     socket.on("close-game", (gameId) => {
+      activeGames.delete(gameId);
       io.to(gameId).emit("gameClosed");
-      // Optionally, you can also remove all sockets from the room or perform cleanup here
     });
 
     socket.on("disconnect", () => {

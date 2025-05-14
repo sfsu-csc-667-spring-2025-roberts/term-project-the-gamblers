@@ -2,7 +2,8 @@ import db from "../connection.js";
 
 const createGame = async (gameName, maxPlayers, visibility, password, userId) => {
 
-    const game = await db.query("INSERT INTO games (game_name, max_players, visibility, password, owner_id) VALUES ($1, $2, $3, $4, $5) RETURNING game_id",
+    const game = await db.query(
+        "INSERT INTO games (game_name, max_players, visibility, password, owner_id) VALUES ($1, $2, $3, $4, $5) RETURNING game_id",
         [gameName, maxPlayers, visibility, password, userId]);
 
     const gameId = game.rows[0].game_id;
@@ -57,7 +58,10 @@ const removeGame = async (game_id, user_id) => {
 };
 
 const leaveGame = async (game_id, user_id) => {
-    const result = await db.query("DELETE FROM game_players WHERE game_id = $1 AND user_id = $2", [game_id, user_id]);
+    const result = await db.query(
+        "DELETE FROM game_players WHERE game_id = $1 AND user_id = $2", 
+        [game_id, user_id]
+    );
     return result.rowCount > 0; // true if a player was removed, false otherwise
 };
 

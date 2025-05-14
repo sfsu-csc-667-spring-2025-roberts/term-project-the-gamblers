@@ -1,4 +1,5 @@
 import express from "express";
+import db from "../../db/connection.js"; // Import the database connection
 
 
 // Import the games module with a different name to avoid conflicts
@@ -129,12 +130,10 @@ router.post("/:gameId/leave", async (req, res) => {
 
     try {
         const game = await gamesDb.getGameById(gameId);
-        if (game && game.owner_id === userId) {
-            // If the owner is leaving, delete the game (and all players)
+        await gamesDb.leaveGame(gameId, userId);
+        if(game && game.owner_id === userId) {
+            // If the owner leaves, delete the game
             await gamesDb.removeGame(gameId, userId);
-        } else {
-            // Otherwise, just remove the player from the game
-            await gamesDb.leaveGame(gameId, userId);
         }
         res.redirect("/lobby");
     } catch (error) {

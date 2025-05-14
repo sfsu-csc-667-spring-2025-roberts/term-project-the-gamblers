@@ -2,16 +2,17 @@
 <html lang="en">
 
 <head>
-    <title>UNO Online - Game Room <%= gameId %>
-    </title>
+    <title>UNO Online - Game Room <%= gameId %></title>
     <%- include('../shared/head') %>
         <link rel="stylesheet" href="/css/lobby.css">
+        <script src="/js/socket.io.js"></script>
         <script>
             window.gameId = "<%= gameId %>";
+            window.socket = io();
         </script>
+
         <script src="/js/chat.js" defer></script>
         <script defer src="/js/games.js"></script>
-        <!-- Optionally add a game.css if you want custom styles for the game page -->
 </head>
 
 <body>
@@ -23,18 +24,34 @@
                     </h1>
                     <span class="user-info">Welcome, <%= username %>!</span>
                 </div>
+
                 <div style="margin-bottom: 1.5em;">
                     <button type="submit" class="btn" id="leave-game-btn"
                         style="background-color: var(--primary-color); color: #fff;">
                         &larr; Back to Lobby
                     </button>
                 </div>
-                <div class="game-area">
-                    <!-- Game UI goes here -->
-                    <div class="game-card"
-                        style="background: #fff; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); padding: 2em; min-height: 200px; display: flex; align-items: center; justify-content: center;">
-                        <span style="color: #888; font-size: 1.2em;">Game UI coming soon...</span>
+                <!-- Game Interface -->
+                <div class="game-area" style="margin-bottom: 2em; text-align: center;">
+                    <div id="turn-indicator" style="margin-bottom: 1em; font-weight: bold;"></div>
+    
+                    <div style="display: flex; justify-content: center; gap: 4em; margin-bottom: 1em;">
+                        <!-- Draw Pile -->
+                        <div id="draw-pile" class="pile" style="width: 100px; height: 140px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            Draw
+                        </div>
+    
+                        <!-- Discard Pile -->
+                        <div id="discard-pile" class="pile" style="width: 100px; height: 140px; background: #ccc; display: flex; align-items: center; justify-content: center;">
+                            Top Card
+                        </div>
                     </div>
+    
+                    <!-- Call UNO Button -->
+                    <button id="call-uno-btn" class="btn" style="background: #f00; color: #fff; margin-bottom: 2em;">Call UNO!</button>
+    
+                    <!-- Player's Hand -->
+                    <div id="player-hand" class="hand-container" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
                 </div>
                 <div class="chat-section">
                     <h3>Game Chat</h3>

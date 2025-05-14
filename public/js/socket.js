@@ -1,6 +1,6 @@
-import { sessionMiddleware } from "../server/middleware/session.js";
-import { UNOGame, drawCard, playCard, checkUNO, callUNO } from "../server/logic/UNOgame.js";
-import db from "../db/connection.js";
+import { sessionMiddleware } from "../../src/server/middleware/session.js";
+import { UNOGame, drawCard, playCard, checkUNO, callUNO } from "../../src/server/logic/UNOgame.js";
+import db from "../../src/db/connection.js";
 
 const activeGames = new Map(); // Map of gameId -> UNOGame instance
 
@@ -23,6 +23,12 @@ export default function initSocketIO(io) {
         username: "System",
         message: `${username} has joined the game.`
       });
+
+      const game = activeGames.get(gameId);
+      if (game) {
+        io.to(gameId).emit("game-state", game.getGameState());
+        socket.emit("player-state", game.getPlayerState(userId));
+      }
     });
 
     socket.on("start-game", async ({ gameId, playerIds }) => {
@@ -46,13 +52,6 @@ export default function initSocketIO(io) {
         socket.emit("error", { message: "Failed to start game." });
       }
     });
-
-    socket.on("join-game", (gameId) => {
-      const game = activeGames.get(gameId);
-      if(!game) return;
-      io.to(gameId).emit("game-state", game.getGameState());
-      socket.emit("player-state", game.getPlayerState(userId));
-    })
 
     socket.on("play-card", ({ gameId, card, chosenColor }) => {
       const game = activeGames.get(gameId);

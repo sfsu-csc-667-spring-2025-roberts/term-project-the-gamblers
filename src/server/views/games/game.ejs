@@ -2,13 +2,20 @@
 <html lang="en">
 
 <head>
-    <title>UNO Online - Game Room <%= gameId %></title>
+    <title>UNO Online - Game Room <%= gameId %>
+    </title>
     <%- include('../shared/head') %>
         <link rel="stylesheet" href="/css/lobby.css">
-        <script src="/js/socket.io.js"></script>
+        <script src="/js/socket.js"></script>
         <script>
             window.gameId = "<%= gameId %>";
+            window.userId = "<%= userId %>";
             window.socket = io();
+
+            window.socket.emit("start-game", {
+                gameId: "<%= gameId %>",
+                playerIds: ["<%= userId %>"]
+            });
         </script>
 
         <script src="/js/chat.js" defer></script>
@@ -34,24 +41,29 @@
                 <!-- Game Interface -->
                 <div class="game-area" style="margin-bottom: 2em; text-align: center;">
                     <div id="turn-indicator" style="margin-bottom: 1em; font-weight: bold;"></div>
-    
+
                     <div style="display: flex; justify-content: center; gap: 4em; margin-bottom: 1em;">
                         <!-- Draw Pile -->
-                        <div id="draw-pile" class="pile" style="width: 100px; height: 140px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        <div id="draw-pile" class="pile"
+                            style="width: 100px; height: 140px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                             Draw
                         </div>
-    
+
                         <!-- Discard Pile -->
-                        <div id="discard-pile" class="pile" style="width: 100px; height: 140px; background: #ccc; display: flex; align-items: center; justify-content: center;">
+                        <div id="discard-pile" class="pile"
+                            style="width: 100px; height: 140px; background: #ccc; display: flex; align-items: center; justify-content: center;">
                             Top Card
                         </div>
                     </div>
-    
+
                     <!-- Call UNO Button -->
-                    <button id="call-uno-btn" class="btn" style="background: #f00; color: #fff; margin-bottom: 2em;">Call UNO!</button>
-    
+                    <button id="call-uno-btn" class="btn"
+                        style="background: #f00; color: #fff; margin-bottom: 2em;">Call UNO!</button>
+
                     <!-- Player's Hand -->
-                    <div id="player-hand" class="hand-container" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;"></div>
+                    <div id="player-hand" class="hand-container"
+                        style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    </div>
                 </div>
                 <div class="chat-section">
                     <h3>Game Chat</h3>

@@ -44,7 +44,7 @@ router.get("/load-games", async (req, res) => {
 router.get("/:gameId", (req, res) => {
     console.log(req.params);
     console.log(req.session.username);
-    res.render("games/game", { gameId: req.params.gameId, username: req.session.username });
+    res.render("games/game", { gameId: req.params.gameId, username: req.session.username, userId: req.session.userId });
 });
 
 // Add a route to handle joining games
@@ -131,7 +131,7 @@ router.post("/:gameId/leave", async (req, res) => {
     try {
         const game = await gamesDb.getGameById(gameId);
         await gamesDb.leaveGame(gameId, userId);
-        if(game && game.owner_id === userId) {
+        if (game && game.owner_id === userId) {
             // If the owner leaves, delete the game
             await gamesDb.removeGame(gameId, userId);
         }

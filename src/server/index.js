@@ -13,7 +13,7 @@ import favicon from "serve-favicon";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import setupSession from "./middleware/session.js";
-import initSocketIO from "./socket.js";
+import initSocketIO from "../../public/js/socket.js";
 import games from "./routes/games.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

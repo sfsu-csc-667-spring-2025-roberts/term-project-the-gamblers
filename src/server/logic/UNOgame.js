@@ -1,4 +1,4 @@
-import db  from '../../db/connection.js';
+import db from '../../db/connection.js';
 import { shuffle } from './utility.js';
 
 export class UNOGame {
@@ -41,21 +41,21 @@ export class UNOGame {
 
     getGameState() {
         return {
-          gameId: this.gameId,
-          players: this.players.map(p => ({
-            id: p.id,
-            name: p.name,
-            handSize: p.hand.length,
-            hasSaidUNO: p.hasSaidUNO
-          })),
-          currentPlayerId: this.getCurrentPlayer().id,
-          topCard: this.discardPile[this.discardPile.length - 1],
-          currentColor: this.currentColor,
-          direction: this.direction,
-          isStarted: this.isStarted,
-          winner: this.winner
+            gameId: this.gameId,
+            players: this.players.map(p => ({
+                id: p.id,
+                name: p.name,
+                handSize: p.hand.length,
+                hasSaidUNO: p.hasSaidUNO
+            })),
+            currentPlayerId: this.getCurrentPlayer().id,
+            topCard: this.discardPile[this.discardPile.length - 1],
+            currentColor: this.currentColor,
+            direction: this.direction,
+            isStarted: this.isStarted,
+            winner: this.winner
         };
-      }
+    }
 
     getPlayerState(playerId) {
         const player = this.players.find(p => p.id === playerId);
@@ -74,11 +74,13 @@ export class UNOGame {
 
 async function getDeckFromDatabase() {
     const result = await db.query("SELECT * FROM cards");
+    // console.log(result.rows);
+    console.dir(result, { depth: null });
     return result.rows;
 }
 
 function dealInitialCards(players, drawPile, cardsPerPlayer = 7) {
-    for(let i = 0; i < cardsPerPlayer; i++) {
+    for (let i = 0; i < cardsPerPlayer; i++) {
         for (const player of players) {
             const card = drawPile.pop();
             player.hand.push(card);
@@ -96,14 +98,14 @@ function drawValidStartingCard(drawPile) {
 }
 
 function isPlayable(card, currentColor, currentValue) {
-    return (card.color === currentColor || 
-            card.value === currentValue || 
-            card.color === "black");
+    return (card.color === currentColor ||
+        card.value === currentValue ||
+        card.color === "black");
 }
 
-export function drawCard(game, playerId){
+export function drawCard(game, playerId) {
     const player = game.players.find(p => p.id === playerId);
-    if(!player || game.getCurrentPlayer().id !== playerId) {
+    if (!player || game.getCurrentPlayer().id !== playerId) {
         return null; // Not the player's turn
     }
 
@@ -116,7 +118,7 @@ export function drawCard(game, playerId){
     }
 
     moveToNextPlayer(game);
-    return null; 
+    return null;
 }
 
 export function playCard(game, playerId, card) {
@@ -140,7 +142,7 @@ export function playCard(game, playerId, card) {
 
     applyCardEffect(game, playedCard);
 
-    if(player.hand.length === 0) {
+    if (player.hand.length === 0) {
         game.winner = player;
         game.isStarted = false; // End the game
     } else {
@@ -185,7 +187,7 @@ function applyCardEffect(game, card) {
 function giveCardsToNextPlayer(game, count) {
     moveToNextPlayer(game);
     const nextPlayer = game.getCurrentPlayer();
-    for(let i = 0; i< count; i++){
+    for (let i = 0; i < count; i++) {
         nextPlayer.hand.push(game.drawPile.pop());
     }
 }
@@ -194,16 +196,16 @@ export function callUNO(gameId, player) {
     const game = activeGames.get(gameId);
     if (!game) return; // Game not found
     const playerInGame = game.players.find(p => p.id === player.id);
-    if(playerInGame) {
+    if (playerInGame) {
         playerInGame.hasSaidUNO = true;
-    } 
-    if(game.players.every(p => p.hasSaidUNO)) {
+    }
+    if (game.players.every(p => p.hasSaidUNO)) {
         game.players.forEach(p => p.hasSaidUNO = false); // Reset UNO status for all players
     }
 }
 
-export function checkUNO(game, player){
-    if(player.hand.length === 1 && !player.hasSaidUNO){
+export function checkUNO(game, player) {
+    if (player.hand.length === 1 && !player.hasSaidUNO) {
         giveCardsToNextPlayer(game, 2);
         player.hasSaidUNO = true;
         return true; // Player has not called UNO

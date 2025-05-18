@@ -59,32 +59,33 @@ window.socket.on("player-state", (data) => {
     handContainer.innerHTML = ""; // Clear previous hand
     hand.forEach(card => {
         const cardElement = document.createElement("div");
-        cardElement.classList.add("card");
-        cardElement.innerText = card.value;
-        cardElement.style.width = "70px";
-        cardElement.style.height = "100px";
-        cardElement.style.border = "1px solid black";
-        cardElement.style.display = "flex";
-        cardElement.style.justifyContent = "center";
-        cardElement.style.alignItems = "center";
-        cardElement.style.margin = "5px";
-        cardElement.style.borderRadius = "5px";
-        cardElement.style.backgroundColor = card.color === "black" ? "black" : card.color;
-        cardElement.style.color = card.color === "black" ? "white" : "black";
-
+        // Treat wild cards as black if color is falsy or 'black'
+        const isWild = card.type === "wild" && (!card.color || card.color === "black");
+        cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
+        let cardHTML = '';
+        if (isWild) {
+            if (card.value === "wild_draw4" || card.value === "wildDrawFour" || card.value === "+4" || card.value === "draw4") {
+                cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
+            } else {
+                cardHTML = `<span class='card-wild-label'>WILD</span>`;
+            }
+        } else {
+            cardHTML = `<span class='card-value'>${card.value}</span>`;
+        }
+        cardElement.innerHTML = cardHTML;
+        cardElement.dataset.cardId = card.id;
         cardElement.addEventListener("click", () => {
             playCard(card);
         });
-
         handContainer.appendChild(cardElement);
     });
     // Update discard pile
     const discardPile = document.getElementById("discard-pile");
-    if(discardPile) discardPile.innerText = '${topCard.color} ${topCard.value}';
+    if (discardPile) discardPile.innerText = `${topCard.color} ${topCard.value}`;
     // Update turn indicator
     const turnIndicator = document.getElementById("turn-indicator");
     turnIndicator.innerText = yourTurn ? "Your Turn" : "Waiting for other player";
-})
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     if (window.gameId && window.socket) {
@@ -100,14 +101,24 @@ function renderHand(cards) {
 
     cards.forEach(card => {
         const cardElement = document.createElement("div");
-        cardElement.classList.add("card", card.color);
-        cardElement.innerText = card.value;
+        // Treat wild cards as black if color is falsy or 'black'
+        const isWild = card.type === "wild" && (!card.color || card.color === "black");
+        cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
+        let cardHTML = '';
+        if (isWild) {
+            if (card.value === "wild_draw4" || card.value === "wildDrawFour" || card.value === "+4" || card.value === "draw4") {
+                cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
+            } else {
+                cardHTML = `<span class='card-wild-label'>WILD</span>`;
+            }
+        } else {
+            cardHTML = `<span class='card-value'>${card.value}</span>`;
+        }
+        cardElement.innerHTML = cardHTML;
         cardElement.dataset.cardId = card.id;
-
         cardElement.addEventListener("click", () => {
             playCard(card);
         });
-
         handContainer.appendChild(cardElement);
     });
 }

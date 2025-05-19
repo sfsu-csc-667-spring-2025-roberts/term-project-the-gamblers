@@ -61,6 +61,7 @@ export class UNOGame {
       direction: this.direction,
       isStarted: this.isStarted,
       winner: this.winner,
+      drawPileCount: this.drawPile.length,
     };
   }
 

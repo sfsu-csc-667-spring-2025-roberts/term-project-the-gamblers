@@ -49,17 +49,15 @@
                 <div class="game-area" style="margin-bottom: 2em; text-align: center;">
                     <div id="turn-indicator" style="margin-bottom: 1em; font-weight: bold;"></div>
 
-                    <div style="display: flex; justify-content: center; gap: 4em; margin-bottom: 1em;">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 2em; margin-bottom: 1em;">
                         <!-- Draw Pile -->
-                        <div id="draw-pile" class="pile"
-                            style="width: 100px; height: 140px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                            Draw
+                        <div id="draw-pile" class="pile">
+                            <div class="draw-pile-stack"></div>
+                            <div id="draw-pile-count"></div>
                         </div>
 
                         <!-- Discard Pile -->
-                        <div id="discard-pile" class="pile"
-                            style="width: 100px; height: 140px; background: #ccc; display: flex; align-items: center; justify-content: center;">
-                            Top Card
+                        <div id="discard-pile" class="pile">
                         </div>
                     </div>
 

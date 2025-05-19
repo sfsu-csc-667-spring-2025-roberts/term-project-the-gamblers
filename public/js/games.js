@@ -60,22 +60,39 @@ window.socket.on("gameStateUpdate", (gameState) => {
       cardElement.classList.add("card", `card-${gameState.topCard.color}`);
       let cardHTML = "";
       if (gameState.topCard.value === "wild_draw4") {
-        cardHTML = getWildSVG() + `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
+        cardHTML =
+          getWildSVG() +
+          `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
       } else {
         cardHTML = getWildSVG();
       }
       cardElement.innerHTML = cardHTML;
-    } else if (gameState.topCard.value === "draw2" && gameState.topCard.type === "action") {
+    } else if (
+      gameState.topCard.value === "draw2" &&
+      gameState.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getDraw2SVG(gameState.topCard.color);
-    } else if (gameState.topCard.value === "skip" && gameState.topCard.type === "action") {
+    } else if (
+      gameState.topCard.value === "skip" &&
+      gameState.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getSkipSVG(gameState.topCard.color);
-    } else if (gameState.topCard.value === "reverse" && gameState.topCard.type === "action") {
+    } else if (
+      gameState.topCard.value === "reverse" &&
+      gameState.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getReverseSVG(gameState.topCard.color);
     } else {
       cardElement.classList.add("card", `card-${gameState.topCard.color}`);
       cardElement.innerHTML = `<span class='card-value'>${gameState.topCard.value}</span>`;
     }
     discardPile.appendChild(cardElement);
+  }
+
+  // Update draw pile count
+  const drawPileCount = document.getElementById("draw-pile-count");
+  if (drawPileCount) {
+    drawPileCount.textContent = gameState.drawPileCount;
   }
 
   // Update turn indicator with the current player's name
@@ -110,9 +127,20 @@ window.socket.on("gameStateUpdate", (gameState) => {
 });
 
 window.socket.on("player-state", (data) => {
-  console.log("[DEBUG] Received player-state event:", data);
-  // Always update the hand, regardless of turn
-  renderHand(data.hand);
+  console.log("Received player-state:", {
+    yourTurn: data.yourTurn,
+    myId: window.userId,
+  });
+
+  const { hand, yourTurn, topCard, drawPileCount } = data;
+  renderHand(hand);
+
+  // Update draw pile count
+  const drawPileCountElement = document.getElementById("draw-pile-count");
+  if (drawPileCountElement) {
+    drawPileCountElement.textContent = drawPileCount;
+  }
+
   const discardPile = document.getElementById("discard-pile");
   if (discardPile) {
     discardPile.innerHTML = "";
@@ -121,16 +149,27 @@ window.socket.on("player-state", (data) => {
       cardElement.classList.add("card", `card-${data.topCard.color}`);
       let cardHTML = "";
       if (data.topCard.value === "wild_draw4") {
-        cardHTML = getWildSVG() + `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
+        cardHTML =
+          getWildSVG() +
+          `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
       } else {
         cardHTML = getWildSVG();
       }
       cardElement.innerHTML = cardHTML;
-    } else if (data.topCard.value === "draw2" && data.topCard.type === "action") {
+    } else if (
+      data.topCard.value === "draw2" &&
+      data.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getDraw2SVG(data.topCard.color);
-    } else if (data.topCard.value === "skip" && data.topCard.type === "action") {
+    } else if (
+      data.topCard.value === "skip" &&
+      data.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getSkipSVG(data.topCard.color);
-    } else if (data.topCard.value === "reverse" && data.topCard.type === "action") {
+    } else if (
+      data.topCard.value === "reverse" &&
+      data.topCard.type === "action"
+    ) {
       cardElement.innerHTML = getReverseSVG(data.topCard.color);
     } else {
       cardElement.classList.add("card", `card-${data.topCard.color}`);
@@ -177,7 +216,9 @@ function renderHand(cards) {
     let cardHTML = "";
     if (isWild) {
       if (card.value === "wild_draw4") {
-        cardHTML = getWildSVG() + `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
+        cardHTML =
+          getWildSVG() +
+          `<span style='position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);color:#FFD700;font-size:2.2rem;font-family:Arial Black,sans-serif;text-shadow:2px 2px 6px #000;font-weight:bold;'>+4</span>`;
       } else {
         cardHTML = getWildSVG();
       }
@@ -225,27 +266,21 @@ if (drawPile) {
   drawPile.innerHTML = ""; // Clear previous
   const stack = document.createElement("div");
   stack.className = "draw-pile-stack";
+
   // Show 4 cards in the stack for effect
   for (let i = 0; i < 4; i++) {
     const back = document.createElement("div");
     back.className = "card-back";
-    back.style.left = `${i * 4}px`;
-    back.style.top = `${i * 2}px`;
+    back.style.transform = `translate(-50%, -50%) translate(${i * 2}px, ${i * 2}px)`;
     back.style.zIndex = i;
     stack.appendChild(back);
   }
-  // Overlay the word "Draw"
-  const label = document.createElement("span");
-  label.textContent = "Draw";
-  label.style.position = "absolute";
-  label.style.left = "50%";
-  label.style.top = "50%";
-  label.style.transform = "translate(-50%, -50%)";
-  label.style.color = "#fff";
-  label.style.fontWeight = "bold";
-  label.style.fontSize = "1.2rem";
-  label.style.textShadow = "1px 1px 2px #000";
-  stack.appendChild(label);
+
+  // Add the counter element
+  const counter = document.createElement("div");
+  counter.id = "draw-pile-count";
+  stack.appendChild(counter);
+
   drawPile.appendChild(stack);
 }
 
@@ -253,12 +288,12 @@ if (drawPile) {
 function getDraw2SVG(color) {
   // Map color to SVG fill
   const colorMap = {
-    red: '#DA1A28',
-    yellow: '#FFD700',
-    blue: '#1C75BC',
-    green: '#3CB44B',
+    red: "#DA1A28",
+    yellow: "#FFD700",
+    blue: "#1C75BC",
+    green: "#3CB44B",
   };
-  const fill = colorMap[color] || '#DA1A28';
+  const fill = colorMap[color] || "#DA1A28";
   return `
     <svg width="80" height="120" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
       <rect width="300" height="450" rx="30" ry="30" fill="${fill}" stroke="black" stroke-width="4"/>
@@ -274,12 +309,12 @@ function getDraw2SVG(color) {
 // Returns the SVG string for a skip card of the given color
 function getSkipSVG(color) {
   const colorMap = {
-    red: '#DA1A28',
-    yellow: '#FFD700',
-    blue: '#1C75BC',
-    green: '#3CB44B',
+    red: "#DA1A28",
+    yellow: "#FFD700",
+    blue: "#1C75BC",
+    green: "#3CB44B",
   };
-  const fill = colorMap[color] || '#DA1A28';
+  const fill = colorMap[color] || "#DA1A28";
   return `
     <svg width="80" height="120" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
       <rect width="300" height="450" rx="30" ry="30" fill="${fill}" stroke="black" stroke-width="4"/>
@@ -293,12 +328,12 @@ function getSkipSVG(color) {
 // Returns the SVG string for a reverse card of the given color
 function getReverseSVG(color) {
   const colorMap = {
-    red: '#DA1A28',
-    yellow: '#FFD700',
-    blue: '#1C75BC',
-    green: '#3CB44B',
+    red: "#DA1A28",
+    yellow: "#FFD700",
+    blue: "#1C75BC",
+    green: "#3CB44B",
   };
-  const fill = colorMap[color] || '#DA1A28';
+  const fill = colorMap[color] || "#DA1A28";
   return `
     <svg width="80" height="120" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
       <rect width="300" height="450" rx="30" ry="30" fill="${fill}" stroke="black" stroke-width="4"/>

@@ -124,6 +124,30 @@ window.socket.on("gameStateUpdate", (gameState) => {
   if (colorIndicator) {
     colorIndicator.textContent = `Current Color: ${gameState.currentColor}`;
   }
+
+  const otherPlayersContainer = document.getElementById("other-players");
+  if (otherPlayersContainer) {
+    otherPlayersContainer.innerHTML = "";
+
+    gameState.players.forEach((player) => {
+      if (String(player.id) !== String(window.userId)) {
+        const playerDiv = document.createElement("div");
+        playerDiv.classList.add("player-avatar");
+
+        if (String(player.id) === String(gameState.currentPlayerId)) {
+          playerDiv.classList.add("active"); // highlight current player's turn
+        }
+
+        playerDiv.innerHTML = `
+          <div class="avatar-circle"></div>
+          <div class="player-name">${player.name}</div>
+          <div class="cards-count">${player.handSize} cards</div>
+        `;
+
+        otherPlayersContainer.appendChild(playerDiv);
+      }
+    });
+  }
 });
 
 window.socket.on("player-state", (data) => {

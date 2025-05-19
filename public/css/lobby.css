@@ -2,6 +2,12 @@
 
 /* Remove general resets, body, .container, .btn, header, etc. */
 
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
 .header {
   background: linear-gradient(
     to right,
@@ -14,8 +20,11 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--shadow-md);
-  position: relative;
-  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .logo {
@@ -50,7 +59,7 @@
   display: flex;
   padding: 30px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 90px auto 0; /* Added top margin to account for fixed header */
   gap: 30px;
   width: 100%;
   box-sizing: border-box;

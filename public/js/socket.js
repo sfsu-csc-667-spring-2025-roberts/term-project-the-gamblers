@@ -1,5 +1,12 @@
 import { sessionMiddleware } from "../../src/server/middleware/session.js";
-import { UNOGame, drawCard, playCard, checkUNO, callUNO, addPlayer } from "../../src/server/logic/UNOgame.js";
+import {
+  UNOGame,
+  drawCard,
+  playCard,
+  checkUNO,
+  callUNO,
+  addPlayer,
+} from "../../src/server/logic/UNOgame.js";
 import db from "../../src/db/connection.js";
 
 const activeGames = new Map(); // Map of gameId -> UNOGame instance
@@ -21,12 +28,12 @@ export default function initSocketIO(io) {
       console.log(`Socket ${socket.id} joined room ${gameId}`);
       io.to(gameId).emit("chat:game", {
         username: "System",
-        message: `${username} has joined the game.`
+        message: `${username} has joined the game.`,
       });
 
       const game = activeGames.get(gameId);
       if (game) {
-        if (!game.players.some(p => p.id === userId)) {
+        if (!game.players.some((p) => p.id === userId)) {
           addPlayer(game, { id: userId, username: username });
         }
         socket.emit("player-state", game.getPlayerState(userId));
@@ -41,7 +48,7 @@ export default function initSocketIO(io) {
       try {
         const { rows: players } = await db.query(
           "SELECT id, username FROM users WHERE id = ANY($1::int[])",
-          [playerIds]
+          [playerIds],
         );
 
         const game = new UNOGame(gameId, players);
@@ -91,10 +98,11 @@ export default function initSocketIO(io) {
       const game = activeGames.get(gameId);
       if (!game) return;
 
-      const player = game.players.find(p => p.id === socket.id);
+      const player = game.players.find((p) => p.id === userId);
       if (player) {
-        UNOGame.callUNO(player);
-        io.to(gameId).emit("gameStateUpdate", game);
+        callUNO(gameId, player);
+        socket.emit("player-state", game.getPlayerState(userId));
+        io.to(gameId).emit("gameStateUpdate", game.getGameState());
       }
     });
 
@@ -102,7 +110,7 @@ export default function initSocketIO(io) {
       const game = activeGames.get(gameId);
       if (!game) return;
 
-      const player = game.players.find(p => p.id === userId);
+      const player = game.players.find((p) => p.id === userId);
       if (player) {
         const penalty = checkUNO(game, player);
         if (penalty) {

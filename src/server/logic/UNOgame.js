@@ -225,7 +225,7 @@ function applyCardEffect(game, card) {
     case "reverse":
       game.direction *= -1;
       break;
-    case "drawTwo":
+    case "draw2":
       giveCardsToNextPlayer(game, 2);
       moveToNextPlayer(game);
       break;

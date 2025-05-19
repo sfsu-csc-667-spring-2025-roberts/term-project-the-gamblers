@@ -6,6 +6,7 @@ import {
   checkUNO,
   callUNO,
   addPlayer,
+  getNextPlayerIndex
 } from "../../src/server/logic/UNOgame.js";
 import db from "../../src/db/connection.js";
 
@@ -67,10 +68,26 @@ export default function initSocketIO(io) {
       const game = activeGames.get(gameId);
       if (!game) return;
 
+      const previousPlayerIndex = game.currentPlayerIndex;
       const result = playCard(game, userId, card, chosenColor);
       if (result?.success) {
         socket.emit("player-state", game.getPlayerState(userId));
         io.to(gameId).emit("gameStateUpdate", game.getGameState());
+
+        if (["draw2", "wild_draw4"].includes(card.value)) {
+          const nextPlayerIndex = getNextPlayerIndex(
+            previousPlayerIndex,
+            game.direction,
+            game.players.length
+          );
+          console.log("Next player index:", nextPlayerIndex);
+          const nextPlayer = game.players[nextPlayerIndex];
+          io.of("/").sockets.forEach((s) => {
+            if (s.request.session.userId == nextPlayer.id) {
+              s.emit("player-state", game.getPlayerState(nextPlayer.id));
+            }
+          });
+        }
       } else {
         socket.emit("error", { message: "Invalid play." });
       }

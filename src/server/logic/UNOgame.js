@@ -88,6 +88,8 @@ export class UNOGame {
       currentPlayerId: currentPlayer?.id,
     });
 
+    console.log("Players:", this.players);
+
     return {
       hand: player.hand,
       yourTurn: isYourTurn,
@@ -113,6 +115,14 @@ function dealInitialCards(players, drawPile, cardsPerPlayer = 7) {
       player.hand.push(card);
     }
   }
+}
+
+export function getNextPlayerIndex(currentIndex, direction, playersLength) {
+  return (currentIndex + direction + playersLength) % playersLength;
+}
+
+function getPlayer(playerId, players) {
+  return players.find((p) => p.id === playerId);
 }
 
 function drawValidStartingCard(drawPile) {
@@ -244,7 +254,7 @@ function applyCardEffect(game, card) {
 
 function giveCardsToNextPlayer(game, count) {
   moveToNextPlayer(game);
-  const nextPlayer = game.getCurrentPlayer();
+  const nextPlayer = game.players[game.currentPlayerIndex];
   for (let i = 0; i < count; i++) {
     nextPlayer.hand.push(game.drawPile.pop());
   }

@@ -44,14 +44,15 @@ window.socket.on("hand:deal", (data) => {
     renderHand(data.hand);
 });
 
-window.socket.on("gameStateUpdate", (gameState) => {
-    if (window.userId && gameState.hands) {
-        const hand = gameState.hands[window.userId];
-        if (hand) {
-            renderHand(hand);
-        }
-    }
-});
+// window.socket.on("gameStateUpdate", (gameState) => {
+//     console.log("gameStateUpdate", gameState);
+//     if (window.userId && gameState.hands) {
+//         const hand = gameState.hands[window.userId];
+//         if (hand) {
+//             renderHand(hand);
+//         }
+//     }
+// });
 
 window.socket.on("player-state", (data) => {
     const { hand, yourTurn, topCard } = data;
@@ -81,7 +82,15 @@ window.socket.on("player-state", (data) => {
     });
     // Update discard pile
     const discardPile = document.getElementById("discard-pile");
-    if (discardPile) discardPile.innerText = `${topCard.color} ${topCard.value}`;
+    // if (discardPile) discardPile.innerText = `${topCard.color} ${topCard.value}`;
+    if (discardPile) {
+        discardPile.innerHTML = "";
+        const cardElement = document.createElement("div");
+        cardElement.classList.add("card", `card-${topCard.color}`);
+        cardElement.innerHTML = `<span class='card-value'>${topCard.value}</span>`;
+        cardElement.dataset.cardId = topCard.id;
+        discardPile.appendChild(cardElement);
+    }
     // Update turn indicator
     const turnIndicator = document.getElementById("turn-indicator");
     turnIndicator.innerText = yourTurn ? "Your Turn" : "Waiting for other player";
@@ -126,7 +135,7 @@ function renderHand(cards) {
 function playCard(card) {
     let chosenColor = null;
 
-    if (card.color === "black") {
+    if (card.type === "wild") {
         chosenColor = prompt("Choose a color: red, green, blue, yellow");
     }
 
@@ -135,4 +144,33 @@ function playCard(card) {
         card: card,
         chosenColor: chosenColor
     });
+}
+
+const drawPile = document.getElementById("draw-pile");
+if (drawPile) {
+    drawPile.innerHTML = ""; // Clear previous
+    const stack = document.createElement("div");
+    stack.className = "draw-pile-stack";
+    // Show 4 cards in the stack for effect
+    for (let i = 0; i < 4; i++) {
+        const back = document.createElement("div");
+        back.className = "card-back";
+        back.style.left = `${i * 4}px`;
+        back.style.top = `${i * 2}px`;
+        back.style.zIndex = i;
+        stack.appendChild(back);
+    }
+    // Overlay the word "Draw"
+    const label = document.createElement("span");
+    label.textContent = "Draw";
+    label.style.position = "absolute";
+    label.style.left = "50%";
+    label.style.top = "50%";
+    label.style.transform = "translate(-50%, -50%)";
+    label.style.color = "#fff";
+    label.style.fontWeight = "bold";
+    label.style.fontSize = "1.2rem";
+    label.style.textShadow = "1px 1px 2px #000";
+    stack.appendChild(label);
+    drawPile.appendChild(stack);
 }

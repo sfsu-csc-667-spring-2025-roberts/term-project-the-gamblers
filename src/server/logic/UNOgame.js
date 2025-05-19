@@ -75,7 +75,7 @@ export class UNOGame {
 async function getDeckFromDatabase() {
     const result = await db.query("SELECT * FROM cards");
     // console.log(result.rows);
-    console.dir(result, { depth: null });
+    // console.dir(result, { depth: null });
     return result.rows;
 }
 
@@ -92,8 +92,12 @@ function drawValidStartingCard(drawPile) {
     let card;
     do {
         card = drawPile.pop();
+        const isNumberCard = !isNaN(Number(card.value));
+        if (isNumberCard) {
+            break;
+        }
         drawPile.unshift(card); // If invalid, put it back to the bottom of the draw pile
-    } while (card.color === "black"); // Ensure the first card is not a wild card
+    } while (true);
     return card;
 }
 
@@ -122,23 +126,32 @@ export function drawCard(game, playerId) {
 }
 
 export function playCard(game, playerId, card) {
+    // console.log("playerId", playerId, "card", card);
     const player = game.getCurrentPlayer();
     if (!player || player.id !== playerId) {
+        console.log("Not the player's turn");
         return null; // Not the player's turn
     }
 
-    const cardIndex = player.hand.findIndex(c => c.id === card.id);
+    // console.log("player", player);
+
+
+    const cardIndex = player.hand.findIndex(c => c.card_id === card.card_id);
+    console.log("cardIndex", cardIndex);
     if (cardIndex === -1) {
+        console.log("Card not found in player's hand");
         return null; // Card not found in player's hand
     }
     if (!isPlayable(card, game.currentColor, game.currentValue)) {
+        console.log("Card not playable");
         return null; // Card not playable
     }
 
     const [playedCard] = player.hand.splice(cardIndex, 1);
+    // console.log("playedCard", playedCard);
     game.discardPile.push(playedCard);
     game.currentValue = playedCard.value;
-    game.currentColor = (playedCard.color === "black") ? game.currentColor : playedCard.color;
+    game.currentColor = (playedCard.type === "wild") ? game.currentColor : playedCard.color;
 
     applyCardEffect(game, playedCard);
 

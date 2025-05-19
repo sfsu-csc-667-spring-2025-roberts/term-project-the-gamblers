@@ -59,7 +59,8 @@ export default function initSocketIO(io) {
 
       const result = playCard(game, userId, card, chosenColor);
       if (result?.success) {
-        io.to(gameId).emit("gameStateUpdate", game);
+        // io.to(gameId).emit("gameStateUpdate", game);
+        io.to(gameId).emit("player-state", game.getPlayerState(userId));
       } else {
         socket.emit("error", { message: "Invalid play." });
       }
@@ -70,7 +71,8 @@ export default function initSocketIO(io) {
       if (!game) return;
 
       drawCard(game, userId);
-      io.to(gameId).emit("gameStateUpdate", game);
+      // io.to(gameId).emit("gameStateUpdate", game);
+      io.to(gameId).emit("player-state", game.getPlayerState(userId));
     });
 
     socket.on("choose-color", ({ gameId, color }) => {

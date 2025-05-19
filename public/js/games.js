@@ -65,7 +65,7 @@ window.socket.on("player-state", (data) => {
         cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
         let cardHTML = '';
         if (isWild) {
-            if (card.value === "wild_draw4" || card.value === "wildDrawFour" || card.value === "+4" || card.value === "draw4") {
+            if (card.value === "wild_draw4") {
                 cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
             } else {
                 cardHTML = `<span class='card-wild-label'>WILD</span>`;
@@ -82,12 +82,23 @@ window.socket.on("player-state", (data) => {
     });
     // Update discard pile
     const discardPile = document.getElementById("discard-pile");
-    // if (discardPile) discardPile.innerText = `${topCard.color} ${topCard.value}`;
     if (discardPile) {
         discardPile.innerHTML = "";
         const cardElement = document.createElement("div");
-        cardElement.classList.add("card", `card-${topCard.color}`);
-        cardElement.innerHTML = `<span class='card-value'>${topCard.value}</span>`;
+        // If the top card is a wild, use the chosen color for the background
+        if (topCard.type === "wild") {
+            cardElement.classList.add("card", `card-${topCard.color}`);
+            let cardHTML = '';
+            if (topCard.value === "wild_draw4") {
+                cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
+            } else {
+                cardHTML = `<span class='card-wild-label'>WILD</span>`;
+            }
+            cardElement.innerHTML = cardHTML;
+        } else {
+            cardElement.classList.add("card", `card-${topCard.color}`);
+            cardElement.innerHTML = `<span class='card-value'>${topCard.value}</span>`;
+        }
         cardElement.dataset.cardId = topCard.id;
         discardPile.appendChild(cardElement);
     }
@@ -115,7 +126,7 @@ function renderHand(cards) {
         cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
         let cardHTML = '';
         if (isWild) {
-            if (card.value === "wild_draw4" || card.value === "wildDrawFour" || card.value === "+4" || card.value === "draw4") {
+            if (card.value === "wild_draw4") {
                 cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
             } else {
                 cardHTML = `<span class='card-wild-label'>WILD</span>`;
@@ -135,8 +146,18 @@ function renderHand(cards) {
 function playCard(card) {
     let chosenColor = null;
 
-    if (card.type === "wild") {
+    if (card.type === "wild" || card.type === "wild_draw4") {
         chosenColor = prompt("Choose a color: red, green, blue, yellow");
+        if (!["red", "green", "blue", "yellow"].includes(chosenColor)) {
+            alert("Invalid color");
+            return;
+        }
+        chosenColor = chosenColor.toLowerCase();
+        console.log("chosenColor", chosenColor);
+        window.socket.emit("choose-color", {
+            gameId: window.gameId,
+            color: chosenColor
+        });
     }
 
     window.socket.emit("play-card", {

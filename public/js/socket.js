@@ -80,7 +80,8 @@ export default function initSocketIO(io) {
       if (!game) return;
 
       game.currentColor = color;
-      io.to(gameId).emit("gameStateUpdate", game);
+      // io.to(gameId).emit("gameStateUpdate", game);
+      io.to(gameId).emit("player-state", game.getPlayerState(userId));
     });
 
     socket.on("call-uno", ({ gameId }) => {

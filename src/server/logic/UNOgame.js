@@ -102,9 +102,8 @@ function drawValidStartingCard(drawPile) {
 }
 
 function isPlayable(card, currentColor, currentValue) {
-    return (card.color === currentColor ||
-        card.value === currentValue ||
-        card.color === "black");
+    if (card.type === "wild") return true;
+    return card.color === currentColor || (card.value === currentValue && card.type !== "wild");
 }
 
 export function drawCard(game, playerId) {
@@ -181,16 +180,12 @@ function applyCardEffect(game, card) {
             giveCardsToNextPlayer(game, 2);
             moveToNextPlayer(game);
             break;
-        case "wildDrawFour":
+        case "wild_draw4":
             giveCardsToNextPlayer(game, 4);
             moveToNextPlayer(game);
             break;
         case "wild":
-            // Wild card, player chooses color
-            const chosenColor = prompt("Choose a color: red, green, blue, yellow");
-            if (["red", "green", "blue", "yellow"].includes(chosenColor)) {
-                game.currentColor = chosenColor;
-            }
+            // Wild card, color should be set by the client; nothing to do here
             break;
         default:
             break; // No effect for regular cards

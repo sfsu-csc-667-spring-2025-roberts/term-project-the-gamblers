@@ -44,15 +44,39 @@ window.socket.on("hand:deal", (data) => {
     renderHand(data.hand);
 });
 
-// window.socket.on("gameStateUpdate", (gameState) => {
-//     console.log("gameStateUpdate", gameState);
-//     if (window.userId && gameState.hands) {
-//         const hand = gameState.hands[window.userId];
-//         if (hand) {
-//             renderHand(hand);
-//         }
-//     }
-// });
+window.socket.on("gameStateUpdate", (gameState) => {
+    console.log("gameStateUpdate", gameState);
+    // Update discard pile
+    const discardPile = document.getElementById("discard-pile");
+    if (discardPile && gameState.topCard) {
+        discardPile.innerHTML = "";
+        const cardElement = document.createElement("div");
+        if (gameState.topCard.type === "wild") {
+            cardElement.classList.add("card", `card-${gameState.topCard.color}`);
+            let cardHTML = '';
+            if (gameState.topCard.value === "wild_draw4") {
+                cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
+            } else {
+                cardHTML = `<span class='card-wild-label'>WILD</span>`;
+            }
+            cardElement.innerHTML = cardHTML;
+        } else {
+            cardElement.classList.add("card", `card-${gameState.topCard.color}`);
+            cardElement.innerHTML = `<span class='card-value'>${gameState.topCard.value}</span>`;
+        }
+        discardPile.appendChild(cardElement);
+    }
+    // Update turn indicator
+    const turnIndicator = document.getElementById("turn-indicator");
+    if (turnIndicator) {
+        turnIndicator.innerText = (gameState.currentPlayerId === window.userId) ? "Your Turn" : "Waiting for other player";
+    }
+    // Optionally update current color display
+    const colorIndicator = document.getElementById("current-color");
+    if (colorIndicator) {
+        colorIndicator.textContent = `Current Color: ${gameState.currentColor}`;
+    }
+});
 
 window.socket.on("player-state", (data) => {
     const { hand, yourTurn, topCard } = data;

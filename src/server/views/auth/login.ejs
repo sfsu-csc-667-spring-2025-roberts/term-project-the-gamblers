@@ -16,6 +16,12 @@
                     <h1>Login to UNO Online</h1>
                 </div>
 
+                <% if(typeof error !== 'undefined' && error) { %>
+                    <div class="error-message">
+                        <%= error %>
+                    </div>
+                <% } %>
+
                 <form action="/auth/login" method="POST">
                     <div class="form-group">
                         <label for="email">Email:</label>

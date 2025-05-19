@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <%- include('shared/head') %>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            font-family: "Fredoka One", "Comic Sans MS", sans-serif;
+            background: linear-gradient(135deg, #0078d7, #004a8c);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 80px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .howtoplay-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .howtoplay-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff4500, #ffcc00, #4caf50, #2196f3);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        h1::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-size: 1.15rem;
+            color: #333;
+        }
+
+        ul, ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+            font-size: 1.15rem;
+            color: #333;
+        }
+        
+        strong {
+            color: var(--primary-color);
+        }
+
+        .card-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px 0;
+            justify-content: center;
+        }
+        
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) rotate(5deg);
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .back-to-home {
+            display: block;
+            margin: 40px auto 20px;
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2rem;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 200px;
+        }
+        
+        .back-to-home:hover {
+            background-color: #ff5722;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .special-card {
+            border: none;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .special-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+        
+        .special-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .special-card h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .rules-section, .strategy-section {
+            background-color: #f0f8ff;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .strategy-section {
+            background-color: #fff8f0;
+        }
+        
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        
+        .tip-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .tip-box h4 {
+            color: #2e7d32;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .howtoplay-content {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('shared/header') %>
+
+    <div class="container">
+        <div class="howtoplay-content">
+            <h1>How to Play UNO</h1>
+            
+            <p>Welcome to UNO Online! This guide will teach you everything you need to know about playing UNO, from basic rules to advanced strategies.</p>
+            
+            <h2>Game Objective</h2>
+            <p>The goal of UNO is simple: be the first player to get rid of all your cards. The game is played with a special deck of cards with different colors, numbers, and special actions.</p>
+            
+            <h2>Card Types</h2>
+            
+            <h3>Number Cards (0-9)</h3>
+            <p>These are the basic cards in four different colors: Red, Blue, Green, and Yellow. Each card has a number from 0 to 9.</p>
+            
+            <div class="card-examples">
+                <div class="card card-red"><span class="card-value">5</span></div>
+                <div class="card card-blue"><span class="card-value">2</span></div>
+                <div class="card card-green"><span class="card-value">7</span></div>
+                <div class="card card-yellow"><span class="card-value">9</span></div>
+            </div>
+            
+            <h3>Special Action Cards</h3>
+            
+            <div class="card-grid">
+                <div class="special-card">
+                    <h4>Skip Card</h4>
+                    <p>When you play this card, the next player's turn is skipped.</p>
+                    <div class="card-examples">
+                        <div class="card card-red"><span class="card-value">⊘</span></div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <h4>Reverse Card</h4>
+                    <p>This card changes the direction of play. If play was going clockwise, it now goes counter-clockwise, and vice versa.</p>
+                    <div class="card-examples">
+                        <div class="card card-blue"><span class="card-value">⟲</span></div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <h4>Draw Two Card</h4>
+                    <p>When you play this card, the next player must draw two cards and skip their turn.</p>
+                    <div class="card-examples">
+                        <div class="card card-green"><span class="card-value">+2</span></div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <h4>Wild Card</h4>
+                    <p>This card can be played on any color. When you play it, you choose what color continues the game.</p>
+                    <div class="card-examples">
+                        <div class="card card-black"><span class="card-wild-label">WILD</span></div>
+                    </div>
+                </div>
+                
+                <div class="special-card">
+                    <h4>Wild Draw Four Card</h4>
+                    <p>This is the most powerful card. You can play it on any color, choose a new color, and force the next player to draw four cards and lose their turn.</p>
+                    <div class="card-examples">
+                        <div class="card card-black"><span class="card-wild-label">WILD</span><span class="card-plus4">+4</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-section">
+                <h2><span class="section-icon">📋</span> Basic Rules</h2>
+                <ol>
+                    <li><strong>Starting the Game:</strong> Each player is dealt 7 cards. The remaining cards form the draw pile. The top card is flipped over to start the discard pile.</li>
+                    <li><strong>Taking Turns:</strong> On your turn, you must play a card that matches either the color or number of the top card on the discard pile. If you can't play a card, you must draw a card from the draw pile.</li>
+                    <li><strong>Playing Special Cards:</strong> Action cards can be played on matching colors or on the same action card. Wild cards can be played anytime.</li>
+                    <li><strong>Calling "UNO":</strong> When you have only one card left, you must call "UNO". If you don't and another player catches you, you must draw two cards.</li>
+                    <li><strong>Winning:</strong> The first player to get rid of all their cards wins the round!</li>
+                </ol>
+            </div>
+            
+            <h2>Playing UNO Online</h2>
+            <ol>
+                <li><strong>Create an Account:</strong> Sign up to access all game features.</li>
+                <li><strong>Join or Create a Game:</strong> From the lobby, you can join an existing game or create your own.</li>
+                <li><strong>Game Interface:</strong> Your cards will be displayed at the bottom of the screen. The discard pile is in the center.</li>
+                <li><strong>Playing Cards:</strong> Click on a card to play it. If it's a valid move, the card will be played.</li>
+                <li><strong>Drawing Cards:</strong> If you can't play, click the draw pile to draw a card.</li>
+                <li><strong>Special Actions:</strong> For Wild cards, you'll be prompted to choose a color after playing.</li>
+                <li><strong>Calling UNO:</strong> The system automatically calls "UNO" for you when you have one card left.</li>
+            </ol>
+            
+            <div class="tip-box">
+                <h4>Pro Tip!</h4>
+                <p>Pay close attention to what cards other players are playing. This can give you clues about what colors they might be collecting or lacking.</p>
+            </div>
+            
+            <div class="strategy-section">
+                <h2><span class="section-icon">🏆</span> Strategy Tips</h2>
+                <ul>
+                    <li><strong>Save Special Cards:</strong> Try to save your action cards for strategic moments, especially when someone is down to their last few cards.</li>
+                    <li><strong>Watch Other Players:</strong> Pay attention to what colors other players might be collecting or avoiding.</li>
+                    <li><strong>Plan Ahead:</strong> Try to keep cards of multiple colors so you have options on your turn.</li>
+                    <li><strong>Use Wild Cards Wisely:</strong> Save Wild cards for when you really need them, such as when you have no matching colors.</li>
+                    <li><strong>Force Card Draws:</strong> Use Draw Two and Wild Draw Four cards to slow down players who are close to winning.</li>
+                </ul>
+            </div>
+            
+            <a href="/" class="btn back-to-home">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Add any interactive elements if needed
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('How to Play page loaded');
+            
+            // Add a subtle animation to cards on page load
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+
+</html> 

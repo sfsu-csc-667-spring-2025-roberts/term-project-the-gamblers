@@ -18,7 +18,7 @@ import games from "./routes/games.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { root, test, auth, lobby, chat } from "./routes/index.js";
+import { root, test, auth, lobby, chat, howtoplay } from "./routes/index.js";
 import sessionMiddleware from "./middle/auth.js";
 
 dotenv.config();
@@ -63,6 +63,7 @@ app.use("/test", test);
 app.use("/auth", auth);
 app.use("/lobby", sessionMiddleware, lobby);
 app.use("/games", games);
+app.use("/howtoplay", howtoplay);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);

@@ -16,38 +16,34 @@
                     <h1>Register for UNO Online</h1>
                 </div>
 
-                <% if(error !==undefined) { %>
+                <% if(typeof error !== 'undefined' && error) { %>
                     <div class="error-message">
-                        <p>
-                            <%= error %>
-                        </p>
+                        <%= error %>
                     </div>
-                    <% } %>
+                <% } %>
 
-                        <form action="/auth/register" method="POST">
-                            <div class="form-group">
-                                <label for="username">Username:</label>
-                                <input type="text" id="username" name="username" required
-                                    placeholder="Choose a username">
-                            </div>
+                <form action="/auth/register" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required placeholder="Choose a username">
+                    </div>
 
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" id="email" name="email" required placeholder="Enter your email">
-                            </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
 
-                            <div class="form-group">
-                                <label for="password">Password:</label>
-                                <input type="password" id="password" name="password" required
-                                    placeholder="Create a password">
-                            </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a password">
+                    </div>
 
-                            <button type="submit" class="register-btn">Register</button>
-                        </form>
+                    <button type="submit" class="register-btn">Register</button>
+                </form>
 
-                        <div class="login-link">
-                            Already have an account? <a href="/auth/login">Log in</a>
-                        </div>
+                <div class="login-link">
+                    Already have an account? <a href="/auth/login">Log in</a>
+                </div>
             </div>
         </div>
 </body>

@@ -4,7 +4,7 @@ import User from "../../db/users/index.js";
 const router = express.Router();
 
 router.get("/register", (req, res) => {
-  res.render("auth/register", { error: null });
+  res.render("auth/register", {});
 });
 
 router.post("/register", async (req, res) => {
@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-  res.render("auth/login", { error: null });
+  res.render("auth/login", {});
 });
 
 router.post("/login", async (req, res) => {

@@ -1,5 +1,5 @@
 import { sessionMiddleware } from "../../src/server/middleware/session.js";
-import { UNOGame, drawCard, playCard, checkUNO, callUNO } from "../../src/server/logic/UNOgame.js";
+import { UNOGame, drawCard, playCard, checkUNO, callUNO, addPlayer } from "../../src/server/logic/UNOgame.js";
 import db from "../../src/db/connection.js";
 
 const activeGames = new Map(); // Map of gameId -> UNOGame instance
@@ -26,7 +26,9 @@ export default function initSocketIO(io) {
 
       const game = activeGames.get(gameId);
       if (game) {
-        io.to(gameId).emit("game-state", game.getGameState());
+        if (!game.players.some(p => p.id === userId)) {
+          addPlayer(game, { id: userId, username: username });
+        }
         socket.emit("player-state", game.getPlayerState(userId));
       }
     });
@@ -46,7 +48,8 @@ export default function initSocketIO(io) {
         await game.initialize();
 
         activeGames.set(gameId, game);
-        io.to(gameId).emit("gameStateUpdate", game);
+        // io.to(gameId).emit("gameStateUpdate", game);
+        socket.emit("player-state", game.getPlayerState(userId));
       } catch (error) {
         console.error("Error starting game:", error);
         socket.emit("error", { message: "Failed to start game." });
@@ -60,7 +63,7 @@ export default function initSocketIO(io) {
       const result = playCard(game, userId, card, chosenColor);
       if (result?.success) {
         // io.to(gameId).emit("gameStateUpdate", game);
-        io.to(gameId).emit("player-state", game.getPlayerState(userId));
+        socket.emit("player-state", game.getPlayerState(userId));
       } else {
         socket.emit("error", { message: "Invalid play." });
       }
@@ -72,7 +75,7 @@ export default function initSocketIO(io) {
 
       drawCard(game, userId);
       // io.to(gameId).emit("gameStateUpdate", game);
-      io.to(gameId).emit("player-state", game.getPlayerState(userId));
+      socket.emit("player-state", game.getPlayerState(userId));
     });
 
     socket.on("choose-color", ({ gameId, color }) => {
@@ -81,7 +84,7 @@ export default function initSocketIO(io) {
 
       game.currentColor = color;
       // io.to(gameId).emit("gameStateUpdate", game);
-      io.to(gameId).emit("player-state", game.getPlayerState(userId));
+      socket.emit("player-state", game.getPlayerState(userId));
     });
 
     socket.on("call-uno", ({ gameId }) => {

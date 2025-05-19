@@ -58,6 +58,8 @@ export class UNOGame {
     }
 
     getPlayerState(playerId) {
+        console.log("Players in game", this.players);
+
         const player = this.players.find(p => p.id === playerId);
         if (!player) return null;
 
@@ -125,47 +127,64 @@ export function drawCard(game, playerId) {
 }
 
 export function playCard(game, playerId, card) {
-    // console.log("playerId", playerId, "card", card);
     const player = game.getCurrentPlayer();
     if (!player || player.id !== playerId) {
         console.log("Not the player's turn");
-        return null; // Not the player's turn
+        return null;
     }
-
-    // console.log("player", player);
-
-
     const cardIndex = player.hand.findIndex(c => c.card_id === card.card_id);
-    console.log("cardIndex", cardIndex);
     if (cardIndex === -1) {
         console.log("Card not found in player's hand");
-        return null; // Card not found in player's hand
+        return null;
     }
     if (!isPlayable(card, game.currentColor, game.currentValue)) {
         console.log("Card not playable");
-        return null; // Card not playable
+        return null;
     }
-
     const [playedCard] = player.hand.splice(cardIndex, 1);
-    // console.log("playedCard", playedCard);
     game.discardPile.push(playedCard);
     game.currentValue = playedCard.value;
     game.currentColor = (playedCard.type === "wild") ? game.currentColor : playedCard.color;
-
     applyCardEffect(game, playedCard);
-
     if (player.hand.length === 0) {
         game.winner = player;
-        game.isStarted = false; // End the game
+        game.isStarted = false;
     } else {
         moveToNextPlayer(game);
     }
-
     return { success: true };
 }
 
 function moveToNextPlayer(game) {
     game.currentPlayerIndex = (game.currentPlayerIndex + game.direction + game.players.length) % game.players.length;
+}
+
+export function addPlayer(game, player) {
+    if (!game || !Array.isArray(game.players)) {
+        console.error("Invalid game object passed to addPlayer");
+        return;
+    }
+    if (!player || !player.id) {
+        console.error("Invalid player object passed to addPlayer");
+        return;
+    }
+    // Check if player already exists
+    if (game.players.some(p => p && p.id === player.id)) {
+        // Player already exists, do not add or deal new cards
+        return;
+    }
+    // Add player with empty hand
+    game.players.push({
+        id: player.id,
+        name: player.username,
+        hand: [],
+        hasSaidUNO: false
+    });
+    // Deal initial cards
+    for (let i = 0; i < 7; i++) {
+        const card = game.drawPile.pop();
+        game.players[game.players.length - 1].hand.push(card);
+    }
 }
 
 function applyCardEffect(game, card) {
@@ -219,12 +238,4 @@ export function checkUNO(game, player) {
         return true; // Player has not called UNO
     }
     return false; // Player has called UNO
-}
-
-export default {
-    UNOGame,
-    drawCard,
-    playCard,
-    callUNO,
-    checkUNO
 }

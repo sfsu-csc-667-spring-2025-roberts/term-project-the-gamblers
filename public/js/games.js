@@ -56,36 +56,11 @@ window.socket.on("hand:deal", (data) => {
 
 window.socket.on("player-state", (data) => {
     const { hand, yourTurn, topCard } = data;
-    const handContainer = document.getElementById("player-hand");
-    handContainer.innerHTML = ""; // Clear previous hand
-    hand.forEach(card => {
-        const cardElement = document.createElement("div");
-        // Treat wild cards as black if color is falsy or 'black'
-        const isWild = card.type === "wild" && (!card.color || card.color === "black");
-        cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
-        let cardHTML = '';
-        if (isWild) {
-            if (card.value === "wild_draw4") {
-                cardHTML = `<span class='card-wild-label'>WILD</span><span class='card-plus4'>+4</span>`;
-            } else {
-                cardHTML = `<span class='card-wild-label'>WILD</span>`;
-            }
-        } else {
-            cardHTML = `<span class='card-value'>${card.value}</span>`;
-        }
-        cardElement.innerHTML = cardHTML;
-        cardElement.dataset.cardId = card.id;
-        cardElement.addEventListener("click", () => {
-            playCard(card);
-        });
-        handContainer.appendChild(cardElement);
-    });
-    // Update discard pile
+    renderHand(hand);
     const discardPile = document.getElementById("discard-pile");
     if (discardPile) {
         discardPile.innerHTML = "";
         const cardElement = document.createElement("div");
-        // If the top card is a wild, use the chosen color for the background
         if (topCard.type === "wild") {
             cardElement.classList.add("card", `card-${topCard.color}`);
             let cardHTML = '';
@@ -99,10 +74,9 @@ window.socket.on("player-state", (data) => {
             cardElement.classList.add("card", `card-${topCard.color}`);
             cardElement.innerHTML = `<span class='card-value'>${topCard.value}</span>`;
         }
-        cardElement.dataset.cardId = topCard.id;
+        cardElement.dataset.cardId = topCard.card_id;
         discardPile.appendChild(cardElement);
     }
-    // Update turn indicator
     const turnIndicator = document.getElementById("turn-indicator");
     turnIndicator.innerText = yourTurn ? "Your Turn" : "Waiting for other player";
 });
@@ -117,11 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function renderHand(cards) {
     const handContainer = document.getElementById("player-hand");
-    handContainer.innerHTML = ""; // Clear previous hand
-
+    handContainer.innerHTML = "";
     cards.forEach(card => {
         const cardElement = document.createElement("div");
-        // Treat wild cards as black if color is falsy or 'black'
         const isWild = card.type === "wild" && (!card.color || card.color === "black");
         cardElement.classList.add("card", isWild ? "card-black" : `card-${card.color}`);
         let cardHTML = '';
@@ -135,7 +107,7 @@ function renderHand(cards) {
             cardHTML = `<span class='card-value'>${card.value}</span>`;
         }
         cardElement.innerHTML = cardHTML;
-        cardElement.dataset.cardId = card.id;
+        cardElement.dataset.cardId = card.card_id;
         cardElement.addEventListener("click", () => {
             playCard(card);
         });
@@ -145,7 +117,6 @@ function renderHand(cards) {
 
 function playCard(card) {
     let chosenColor = null;
-
     if (card.type === "wild" || card.type === "wild_draw4") {
         chosenColor = prompt("Choose a color: red, green, blue, yellow");
         if (!["red", "green", "blue", "yellow"].includes(chosenColor)) {
@@ -153,13 +124,11 @@ function playCard(card) {
             return;
         }
         chosenColor = chosenColor.toLowerCase();
-        console.log("chosenColor", chosenColor);
         window.socket.emit("choose-color", {
             gameId: window.gameId,
             color: chosenColor
         });
     }
-
     window.socket.emit("play-card", {
         gameId: window.gameId,
         card: card,

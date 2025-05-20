@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 import { root, test, auth, lobby, chat, howtoplay } from "./routes/index.js";
-import sessionMiddleware from "./middle/auth.js";
+import sessionAuthMiddleware from "./middle/auth.js";
 
 dotenv.config();
 const app = express();
@@ -39,10 +39,6 @@ if (process.env.NODE_ENV !== "production") {
   app.use(connectLivereload());
 }
 
-setupSession(app);
-
-const PORT = process.env.PORT || 3000;
-
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
@@ -58,17 +54,22 @@ app.get("/favicon.ico", (req, res) => {
 app.set("views", path.join(process.cwd(), "src", "server", "views"));
 app.set("view engine", "ejs");
 
+// Initialize session middleware
+const sessionMiddleware = setupSession(app);
+const PORT = process.env.PORT || 3000;
+
 app.use("/", root);
 app.use("/test", test);
 app.use("/auth", auth);
-app.use("/lobby", sessionMiddleware, lobby);
+app.use("/lobby", sessionAuthMiddleware, lobby);
 app.use("/games", games);
 app.use("/howtoplay", howtoplay);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-initSocketIO(io);
+// Pass the session middleware to socket initialization
+initSocketIO(io, sessionMiddleware);
 
 app.use("/chat", chat(io));
 

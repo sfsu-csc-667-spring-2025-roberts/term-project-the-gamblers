@@ -1,4 +1,3 @@
-import { sessionMiddleware } from "../../src/server/middleware/session.js";
 import {
   UNOGame,
   drawCard,
@@ -12,21 +11,38 @@ import db from "../../src/db/connection.js";
 
 const activeGames = new Map(); // Map of gameId -> UNOGame instance
 
-export default function initSocketIO(io) {
-  io.use((socket, next) => {
-    sessionMiddleware(socket.request, {}, next);
-  });
+export default function initSocketIO(io, sessionMiddleware) {
+  // Wrap session middleware for socket.io
+  if (sessionMiddleware) {
+    io.use((socket, next) => {
+      // Apply session middleware to each socket connection
+      sessionMiddleware(socket.request, {}, next);
+    });
+  }
 
   io.on("connection", (socket) => {
+    // Get session data after the session middleware has been applied
     const session = socket.request.session;
-    const username = session?.username || "anonymous";
-    const userId = session?.userId || socket.id; // Fallback if no session userId
+    
+    if (!session) {
+      console.log("Warning: No session data available for socket:", socket.id);
+      socket.emit("error", { message: "Session not available, please log in again" });
+      return;
+    }
 
-    console.log(`User connected: ${socket.id} as ${username}`);
+    const username = session.username || "anonymous";
+    const userId = session.userId || socket.id; // Fallback if no session userId
+
+    console.log(`User connected: ${socket.id} as ${username} (userId: ${userId})`);
+    console.log(`Session data:`, { 
+      sessionID: session.id,
+      username: session.username, 
+      userId: session.userId 
+    });
 
     socket.on("join-game", (gameId) => {
       socket.join(gameId);
-      console.log(`Socket ${socket.id} joined room ${gameId}`);
+      console.log(`Socket ${socket.id} joined room ${gameId} with userId: ${userId}`);
       io.to(gameId).emit("chat:game", {
         username: "System",
         message: `${username} has joined the game.`,
@@ -152,7 +168,7 @@ export default function initSocketIO(io) {
     });
 
     socket.on("disconnect", () => {
-      console.log(`User disconnected: ${socket.id}`);
+      console.log(`User disconnected: ${socket.id} (userId: ${userId}, username: ${username})`);
     });
   });
 }

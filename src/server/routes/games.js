@@ -142,4 +142,22 @@ router.post("/:gameId/leave", async (req, res) => {
     }
 });
 
+// Endpoint for automatic game deletion when game ends
+router.post("/:gameId/end", async (req, res) => {
+    const gameId = req.params.gameId;
+
+    try {
+        // Delete all players from the game
+        await db.query("DELETE FROM game_players WHERE game_id = $1", [gameId]);
+
+        // Delete the game itself without checking for owner
+        await db.query("DELETE FROM games WHERE game_id = $1", [gameId]);
+
+        res.json({ success: true, message: "Game successfully ended and deleted" });
+    } catch (error) {
+        console.error("Error ending game:", error);
+        res.status(500).json({ success: false, message: "Failed to end game" });
+    }
+});
+
 export default router;

@@ -152,7 +152,7 @@ window.socket.on("gameStateUpdate", (gameState) => {
         }
 
         // Create a flag indicator if player has said UNO
-        if(player.hasSaidUNO) {
+        if (player.hasSaidUNO) {
           const unoIcon = document.createElement("span");
           unoIcon.textContent = "UNO!";
           unoIcon.style.color = "red";
@@ -295,12 +295,12 @@ function playCard(card) {
   // Check if it's the player's turn before attempting to play a card
   const turnIndicator = document.getElementById("turn-indicator");
   const isYourTurn = turnIndicator && turnIndicator.classList.contains("your-turn");
-  
+
   if (!isYourTurn) {
     alert("Wait for your turn!");
     return;
   }
-  
+
   let chosenColor = null;
   if (card.type === "wild" || card.type === "wild_draw4") {
     chosenColor = prompt("Choose a color: red, green, blue, yellow");
@@ -481,4 +481,22 @@ function showEndGameScreen(players) {
   });
 
   endGameScreen.classList.add("show");
+
+  // Automatically delete the game when the end game screen shows up
+  fetch(`/games/${window.gameId}/end`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Failed to end game automatically');
+      } else {
+        console.log('Game successfully ended and deleted');
+      }
+    })
+    .catch(error => {
+      console.error('Error ending game:', error);
+    });
 }

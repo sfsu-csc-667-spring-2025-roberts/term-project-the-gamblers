@@ -87,6 +87,9 @@ window.socket.on("gameStateUpdate", (gameState) => {
       cardElement.innerHTML = `<span class='card-value'>${gameState.topCard.value}</span>`;
     }
     discardPile.appendChild(cardElement);
+
+    // Update color ring around discard pile
+    updateColorRing(gameState.currentColor);
   }
 
   // Update draw pile count
@@ -201,6 +204,11 @@ window.socket.on("player-state", (data) => {
     }
     cardElement.dataset.cardId = data.topCard.card_id;
     discardPile.appendChild(cardElement);
+
+    // Update color ring for the player state as well
+    if (data.currentColor) {
+      updateColorRing(data.currentColor);
+    }
   }
   const turnIndicator = document.getElementById("turn-indicator");
   if (turnIndicator) {
@@ -396,3 +404,29 @@ function getWildSVG() {
     </svg>
   `;
 }
+
+// Add this function to update the color ring
+function updateColorRing(color) {
+  const colorRing = document.getElementById("color-ring");
+
+  if (!colorRing) return;
+
+  // Remove existing color classes
+  colorRing.classList.remove("red", "blue", "green", "yellow");
+
+  // Add appropriate class based on current color
+  colorRing.classList.add(color);
+
+  // Add a subtle animation effect to highlight the change
+  colorRing.style.animation = "none";
+  // Force reflow
+  void colorRing.offsetWidth;
+  colorRing.style.animation = "glow 2s infinite alternate";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // ...existing code...
+
+  // Initialize color ring with default color (red)
+  updateColorRing("red");
+});

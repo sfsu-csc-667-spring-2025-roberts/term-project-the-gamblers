@@ -237,11 +237,31 @@ function applyCardEffect(game, card) {
       game.direction *= -1;
       break;
     case "draw2":
-      giveCardsToNextPlayer(game, 2);
+      // Give cards to next player without advancing turn
+      const nextPlayerIndex = getNextPlayerIndex(
+        game.currentPlayerIndex,
+        game.direction,
+        game.players.length
+      );
+      const nextPlayer = game.players[nextPlayerIndex];
+      for (let i = 0; i < 2; i++) {
+        nextPlayer.hand.push(game.drawPile.pop());
+      }
+      // Now advance turn (skipping the player who drew cards)
       moveToNextPlayer(game);
       break;
     case "wild_draw4":
-      giveCardsToNextPlayer(game, 4);
+      // Give cards to next player without advancing turn
+      const wildNextPlayerIndex = getNextPlayerIndex(
+        game.currentPlayerIndex,
+        game.direction,
+        game.players.length
+      );
+      const wildNextPlayer = game.players[wildNextPlayerIndex];
+      for (let i = 0; i < 4; i++) {
+        wildNextPlayer.hand.push(game.drawPile.pop());
+      }
+      // Now advance turn (skipping the player who drew cards)
       moveToNextPlayer(game);
       break;
     case "wild":

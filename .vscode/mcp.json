@@ -1,0 +1,12 @@
+{
+    "servers": {
+        "postgres": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-postgres",
+                "postgresql://tushinkulshreshtha:Vishu56169@localhost:5432/gamblers_db"
+            ]
+        }
+    }
+}

@@ -151,6 +151,15 @@ window.socket.on("gameStateUpdate", (gameState) => {
           playerDiv.classList.add("active"); // highlight current player's turn
         }
 
+        // Create a flag indicator if player has said UNO
+        if(player.hasSaidUNO) {
+          const unoIcon = document.createElement("span");
+          unoIcon.textContent = "UNO!";
+          unoIcon.style.color = "red";
+          playerDiv.classList.add("uno-flag");
+          //playerDiv.appendChild(unoIcon);
+        }
+
         playerDiv.innerHTML = `
           <div class="avatar-circle"></div>
           <div class="player-name">${player.name}</div>

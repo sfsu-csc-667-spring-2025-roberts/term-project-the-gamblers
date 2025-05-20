@@ -133,9 +133,14 @@ export default function initSocketIO(io, sessionMiddleware) {
 
       const player = game.players.find((p) => p.id === userId);
       if (player) {
-        callUNO(gameId, player);
-        socket.emit("player-state", game.getPlayerState(userId));
-        io.to(gameId).emit("gameStateUpdate", game.getGameState());
+        const result = callUNO(game, player);
+
+        if(result?.success) {
+          socket.emit("player-state", game.getPlayerState(userId));
+          io.to(gameId).emit("gameStateUpdate", game.getGameState());
+        } else {
+          socket.emit("error", { message: "You cannot call UNO right now." });
+        }
       }
     });
 

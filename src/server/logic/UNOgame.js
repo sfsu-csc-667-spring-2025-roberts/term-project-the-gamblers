@@ -66,6 +66,9 @@ export class UNOGame {
       winner: this.winner,
       drawPileCount: this.drawPile.length,
       isGameOver: this.winner !== null,
+      unoCallers: this.players
+        .filter((p) => p.hasSaidUNO)
+        .map((p) => ({ id: p.id, name: p.name })),
     };
   }
 
@@ -96,6 +99,7 @@ export class UNOGame {
 
     return {
       hand: player.hand,
+      calledUNO: player.hasSaidUNO || false,
       yourTurn: isYourTurn,
       topCard: this.discardPile[this.discardPile.length - 1],
       currentColor: this.currentColor,
@@ -176,11 +180,16 @@ export function drawCard(game, playerId) {
     game.discardPile = [topCard];
   }
 
+  if(player.hand.length !== 1){
+      player.hasSaidUNO = false;
+    }
+
   moveToNextPlayer(game);
   // Skip players who have already finished
   while (game.getCurrentPlayer().rank !== null) {
     moveToNextPlayer(game);
   }
+  
   return card;
 }
 
@@ -216,6 +225,10 @@ export function playCard(game, playerId, card) {
       game.winner = game.players.find((p) => p.rank === 1);
     }
   }
+
+  if(player.hand.length !== 1){
+      player.hasSaidUNO = false;
+    }
 
   applyCardEffect(game, playedCard);
 
@@ -331,20 +344,28 @@ function giveCardsToNextPlayer(game, count) {
   }
 }
 
-export function callUNO(gameId, player) {
-  const game = activeGames.get(gameId);
-  if (!game) return; // Game not found
-  const playerInGame = game.players.find((p) => p.id === player.id);
-  if (playerInGame) {
-    playerInGame.hasSaidUNO = true;
+export function callUNO(game, player) {
+  if(!player || !game) return { success: false, message: "Invalid player or game" };
+
+  const actualPlayer = game.players.find((p) => p.id === player.id);
+  if (!actualPlayer) {
+    return { success: false, message: "Player not found in game" };
   }
-  if (game.players.every((p) => p.hasSaidUNO)) {
-    game.players.forEach((p) => (p.hasSaidUNO = false)); // Reset UNO status for all players
+
+  if(actualPlayer.hand.length === 1 && !actualPlayer.hasSaidUNO) {
+    actualPlayer.hasSaidUNO = true;
+    return { success: true, message: "UNO called successfully" };
   }
+  return { success: false, message: "Cannot call UNO" };
 }
 
 export function checkUNO(game, player) {
-  if (player.hand.length === 1 && !player.hasSaidUNO) {
+  const actualPlayer = game.players.find((p) => p.id === player.id);
+  if (!actualPlayer) {
+    return false; // Player not found
+  }
+
+  if (actualPlayer.hand.length === 1 && !actualPlayer.hasSaidUNO) {
     giveCardsToNextPlayer(game, 2);
     player.hasSaidUNO = true;
     return true; // Player has not called UNO

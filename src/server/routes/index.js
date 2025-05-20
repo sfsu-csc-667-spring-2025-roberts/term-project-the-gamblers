@@ -1,7 +1,11 @@
-export { default as root } from "./root.js";
-export { default as test } from "./test.js";
-export { default as lobby } from "./lobby.js";
-export { default as auth } from "./auth.js";
-export { default as chat } from "./chat.js";
-export { default as games } from "./games.js";
-export { default as howtoplay } from "./howtoplay.js";
+import express from "express";
+import root from "./root.js";
+import auth from "./auth.js";
+import games from "./games.js";
+import chat from "./chat.js";
+import lobby from "./lobby.js";
+import test from "./test.js";
+import howtoplay from "./howtoplay.js";
+import faq from "./faq.js";
+
+export { root, auth, games, chat, lobby, test, howtoplay, faq };

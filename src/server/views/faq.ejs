@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <%- include('shared/head') %>
+        <link rel="stylesheet" href="/css/main.css">
+        <style>
+            body {
+                font-family: "Poppins", "Fredoka One", "Comic Sans MS", sans-serif;
+                background: linear-gradient(135deg, #0078d7, #004a8c);
+                color: var(--text-color);
+                min-height: 100vh;
+            }
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+                padding-top: 80px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .faq-content {
+                background-color: rgba(255, 255, 255, 0.95);
+                border-radius: 16px;
+                padding: 40px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+                margin-top: 20px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .faq-content::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(90deg, #ff4500, #ffcc00, #4caf50, #2196f3);
+            }
+
+            h1 {
+                color: var(--primary-color);
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.8rem;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+                position: relative;
+            }
+
+            h1::after {
+                content: "";
+                display: block;
+                width: 100px;
+                height: 4px;
+                background-color: var(--secondary-color);
+                margin: 15px auto 0;
+                border-radius: 2px;
+            }
+
+            h2 {
+                color: var(--accent-color);
+                margin-top: 40px;
+                margin-bottom: 20px;
+                font-size: 2rem;
+                border-bottom: 3px solid var(--secondary-color);
+                padding-bottom: 10px;
+                display: inline-block;
+            }
+
+            .faq-item {
+                margin-bottom: 25px;
+                border-bottom: 1px solid #e0e0e0;
+                padding-bottom: 20px;
+            }
+
+            .faq-item:last-child {
+                border-bottom: none;
+            }
+
+            .question {
+                font-size: 1.3rem;
+                font-weight: 600;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+                display: flex;
+                align-items: flex-start;
+            }
+
+            .question::before {
+                content: "Q:";
+                font-size: 1.4rem;
+                color: var(--accent-color);
+                font-weight: 700;
+                margin-right: 10px;
+                min-width: 30px;
+            }
+
+            .answer {
+                font-size: 1.15rem;
+                line-height: 1.7;
+                color: #333;
+                margin-left: 30px;
+                position: relative;
+            }
+
+            .answer::before {
+                content: "A:";
+                position: absolute;
+                left: -30px;
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+
+            .category-title {
+                color: var(--accent-color);
+                font-size: 1.6rem;
+                border-left: 6px solid var(--primary-color);
+                padding-left: 15px;
+                margin: 40px 0 25px;
+                background-color: #f8f8f8;
+                padding: 10px 15px;
+                border-radius: 0 8px 8px 0;
+            }
+
+            .back-to-home {
+                display: block;
+                margin: 40px auto 20px;
+                text-align: center;
+                background-color: var(--primary-color);
+                color: white;
+                font-size: 1.2rem;
+                padding: 12px 30px;
+                border-radius: 30px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                max-width: 200px;
+            }
+
+            .back-to-home:hover {
+                background-color: #ff5722;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 15px;
+                    padding-top: 80px;
+                }
+
+                .faq-content {
+                    padding: 25px;
+                }
+
+                h1 {
+                    font-size: 2.2rem;
+                }
+
+                h2 {
+                    font-size: 1.6rem;
+                }
+
+                .question {
+                    font-size: 1.2rem;
+                }
+
+                .answer {
+                    font-size: 1rem;
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('shared/header') %>
+
+        <div class="container">
+            <div class="faq-content">
+                <h1>Frequently Asked Questions</h1>
+
+                <p>Find answers to common questions about UNO Online. If your question isn't covered here, feel free to
+                    <a href="/contact">contact us</a>.</p>
+
+                <div class="category-title">Game Basics</div>
+
+                <div class="faq-item">
+                    <div class="question">What is UNO Online?</div>
+                    <div class="answer">UNO Online is a digital version of the classic card game UNO. It allows you to
+                        play the beloved card game with friends or other players from anywhere with an internet
+                        connection.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Do I need to create an account to play?</div>
+                    <div class="answer">Yes, you need to register for an account to access game features, join games,
+                        and track your progress. Registration is free and only requires a username, email, and password.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">How many players can join a single game?</div>
+                    <div class="answer">A standard UNO game can accommodate 2-4 players. When creating a game, you can
+                        specify the maximum number of players allowed to join.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Are the rules the same as the physical card game?</div>
+                    <div class="answer">Yes, we follow the official UNO rules. For details on gameplay, check out our <a
+                            href="/howtoplay">How to Play</a> page.</div>
+                </div>
+
+                <div class="category-title">Account Management</div>
+
+                <div class="faq-item">
+                    <div class="question">How do I change my password?</div>
+                    <div class="answer">You can change your password by going to your profile settings. Click on your
+                        username in the top right corner, select "Settings," and then choose "Change Password."</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Can I change my username?</div>
+                    <div class="answer">Currently, usernames cannot be changed after registration. Please choose your
+                        username carefully when signing up.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">How do I delete my account?</div>
+                    <div class="answer">To delete your account, go to your profile settings, scroll to the bottom, and
+                        click on "Delete Account." Please note that this action is permanent and cannot be undone.</div>
+                </div>
+
+                <div class="category-title">Gameplay</div>
+
+                <div class="faq-item">
+                    <div class="question">How do I create a new game?</div>
+                    <div class="answer">To create a new game, go to the Lobby page and click on "Create New Game." You
+                        can then set game options like name, player limit, and visibility (public or private).</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Can I play with specific friends?</div>
+                    <div class="answer">Yes! You can create a private game with a password and share the game details
+                        with your friends. They'll need to enter the password to join your game.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">What happens if I disconnect during a game?</div>
+                    <div class="answer">If you disconnect, the system will try to keep your spot for a few minutes. You
+                        can rejoin by going back to the same game. After a timeout period, you may be removed from the
+                        game.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">How do I call "UNO"?</div>
+                    <div class="answer">When you have only one card left, click the "Call UNO!" button that appears on
+                        your screen. If you don't call UNO and another player catches you, you'll have to draw two
+                        cards.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">How do I use Wild cards?</div>
+                    <div class="answer">When you play a Wild card, you'll be prompted to choose a color. The next player
+                        must play a card of that color or another Wild card.</div>
+                </div>
+
+                <div class="category-title">Technical Questions</div>
+
+                <div class="faq-item">
+                    <div class="question">Which browsers are supported?</div>
+                    <div class="answer">UNO Online works best on Chrome, Firefox, Safari, and Edge. We recommend keeping
+                        your browser updated to the latest version for the best experience.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Can I play on mobile devices?</div>
+                    <div class="answer">Yes, our website is responsive and works on mobile devices. For the best
+                        experience, we recommend using a tablet or device with a larger screen.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">What should I do if I encounter a bug?</div>
+                    <div class="answer">If you encounter any issues, please report them through our <a
+                            href="/contact">Contact page</a>. Include details about the problem, steps to reproduce it,
+                        and your browser information.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="question">Is my data secure?</div>
+                    <div class="answer">Yes, we take data security seriously. We use encryption for sensitive
+                        information and never share your personal data with third parties. For more details, please
+                        review our <a href="/privacy">Privacy Policy</a>.</div>
+                </div>
+
+                <a href="/" class="btn back-to-home">Back to Home</a>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('FAQ page loaded');
+            });
+        </script>
+</body>
+
+</html>

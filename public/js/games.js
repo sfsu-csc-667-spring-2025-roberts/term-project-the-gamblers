@@ -16,6 +16,11 @@ document.getElementById("leave-game-btn").addEventListener("click", () => {
 });
 
 document.getElementById("draw-pile").addEventListener("click", () => {
+  // Don't allow drawing if player has no cards
+  const playerHand = document.getElementById("player-hand");
+  if (playerHand && playerHand.children.length === 0) {
+    return;
+  }
   window.socket.emit("draw-card", { gameId: window.gameId });
 });
 
@@ -50,6 +55,11 @@ window.socket.on("gameStateUpdate", (gameState) => {
     myId: window.userId,
     players: gameState.players,
   });
+
+  // Check if game is over
+  if (gameState.isGameOver) {
+    showEndGameScreen(gameState.players);
+  }
 
   // Update discard pile
   const discardPile = document.getElementById("discard-pile");
@@ -430,3 +440,27 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize color ring with default color (red)
   updateColorRing("red");
 });
+
+function showEndGameScreen(players) {
+  const endGameScreen = document.getElementById("endGameScreen");
+  const rankingsList = document.getElementById("rankingsList");
+
+  const sortedPlayers = [...players].sort(
+    (a, b) => (a.rank || Infinity) - (b.rank || Infinity),
+  );
+
+  rankingsList.innerHTML = "";
+
+  sortedPlayers.forEach((player) => {
+    const rankClass = player.rank <= 3 ? `rank-${player.rank}` : "rank-other";
+    const rankItem = document.createElement("li");
+    rankItem.className = "ranking-item";
+    rankItem.innerHTML = `
+      <div class="rank-number ${rankClass}">${player.rank || "-"}</div>
+      <div class="player-name">${player.name}</div>
+    `;
+    rankingsList.appendChild(rankItem);
+  });
+
+  endGameScreen.classList.add("show");
+}

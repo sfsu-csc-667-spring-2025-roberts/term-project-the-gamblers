@@ -9,6 +9,7 @@ export class UNOGame {
       name: p.username,
       hand: [],
       hasSaidUNO: false,
+      rank: null,
     })); // Player objects
     this.currentPlayerIndex = 0; // Index of the current player
     this.direction = 1; // 1 for clockwise, -1 for counter-clockwise
@@ -18,6 +19,7 @@ export class UNOGame {
     this.currentValue = null; // Current value in play
     this.isStarted = false; // Game started flag
     this.winner = null; // Winner of the game
+    this.currentRank = 1;
   }
 
   async initialize() {
@@ -54,6 +56,7 @@ export class UNOGame {
         name: p.name,
         handSize: p.hand.length,
         hasSaidUNO: p.hasSaidUNO,
+        rank: p.rank,
       })),
       currentPlayerId: currentPlayer?.id,
       topCard: this.discardPile[this.discardPile.length - 1],
@@ -62,6 +65,7 @@ export class UNOGame {
       isStarted: this.isStarted,
       winner: this.winner,
       drawPileCount: this.drawPile.length,
+      isGameOver: this.winner !== null,
     };
   }
 
@@ -147,9 +151,21 @@ function isPlayable(card, currentColor, currentValue) {
 }
 
 export function drawCard(game, playerId) {
-  const player = game.players.find((p) => p.id === playerId);
-  if (!player || game.getCurrentPlayer().id !== playerId) {
-    return null; // Not the player's turn
+  const player = game.players.find((p) => String(p.id) === String(playerId));
+  // Check if player exists, if it's their turn, and if they haven't finished
+  if (
+    !player ||
+    String(game.getCurrentPlayer().id) !== String(playerId) ||
+    player.hand.length === 0 ||
+    player.rank !== null
+  ) {
+    console.log("Draw card rejected:", {
+      playerExists: !!player,
+      isCurrentPlayer: String(game.getCurrentPlayer()?.id) === String(playerId),
+      handLength: player?.hand.length,
+      rank: player?.rank,
+    });
+    return null; // Not the player's turn or player has already finished
   }
 
   const card = game.drawPile.pop();
@@ -161,7 +177,11 @@ export function drawCard(game, playerId) {
   }
 
   moveToNextPlayer(game);
-  return null;
+  // Skip players who have already finished
+  while (game.getCurrentPlayer().rank !== null) {
+    moveToNextPlayer(game);
+  }
+  return card;
 }
 
 export function playCard(game, playerId, card) {
@@ -184,13 +204,25 @@ export function playCard(game, playerId, card) {
   game.currentValue = playedCard.value;
   game.currentColor =
     playedCard.type === "wild" ? game.currentColor : playedCard.color;
-  applyCardEffect(game, playedCard);
+
   if (player.hand.length === 0) {
-    game.winner = player;
-    game.isStarted = false;
-  } else {
-    moveToNextPlayer(game);
+    player.rank = game.currentRank++;
+
+    const playersWithCards = game.players.filter((p) => p.rank === null);
+
+    if (playersWithCards.length === 1) {
+      playersWithCards[0].rank = game.currentRank;
+      game.isStarted = false;
+      game.winner = game.players.find((p) => p.rank === 1);
+    }
   }
+
+  applyCardEffect(game, playedCard);
+
+  if (game.isStarted) {
+    findNextUnfinishedPlayer(game);
+  }
+
   return { success: true };
 }
 
@@ -220,6 +252,7 @@ export function addPlayer(game, player) {
     name: player.username,
     hand: [],
     hasSaidUNO: false,
+    rank: null,
   });
   // Deal initial cards
   for (let i = 0; i < 7; i++) {
@@ -232,43 +265,61 @@ function applyCardEffect(game, card) {
   switch (card.value) {
     case "skip":
       moveToNextPlayer(game);
+      moveToNextPlayer(game);
       break;
+
     case "reverse":
       game.direction *= -1;
+      moveToNextPlayer(game);
       break;
+
     case "draw2":
-      // Give cards to next player without advancing turn
-      const nextPlayerIndex = getNextPlayerIndex(
-        game.currentPlayerIndex,
-        game.direction,
-        game.players.length
-      );
-      const nextPlayer = game.players[nextPlayerIndex];
-      for (let i = 0; i < 2; i++) {
-        nextPlayer.hand.push(game.drawPile.pop());
-      }
-      // Now advance turn (skipping the player who drew cards)
       moveToNextPlayer(game);
+      const targetPlayer = game.getCurrentPlayer();
+      if (targetPlayer && targetPlayer.rank === null) {
+        for (let i = 0; i < 2; i++) {
+          targetPlayer.hand.push(game.drawPile.pop());
+        }
+      }
+      moveToNextPlayer(game); // Skip their turn
       break;
+
     case "wild_draw4":
-      // Give cards to next player without advancing turn
-      const wildNextPlayerIndex = getNextPlayerIndex(
-        game.currentPlayerIndex,
-        game.direction,
-        game.players.length
-      );
-      const wildNextPlayer = game.players[wildNextPlayerIndex];
-      for (let i = 0; i < 4; i++) {
-        wildNextPlayer.hand.push(game.drawPile.pop());
+      moveToNextPlayer(game); // Move to player who will draw
+      const wildTargetPlayer = game.getCurrentPlayer();
+      if (wildTargetPlayer && wildTargetPlayer.rank === null) {
+        for (let i = 0; i < 4; i++) {
+          wildTargetPlayer.hand.push(game.drawPile.pop());
+        }
       }
-      // Now advance turn (skipping the player who drew cards)
       moveToNextPlayer(game);
       break;
+
     case "wild":
-      // Wild card, color should be set by the client; nothing to do here
+      moveToNextPlayer(game);
       break;
+
     default:
-      break; // No effect for regular cards
+      moveToNextPlayer(game);
+      break;
+  }
+}
+
+// Helper function to find the next unfinished player
+function findNextUnfinishedPlayer(game) {
+  let loopCount = 0;
+  while (game.getCurrentPlayer().rank !== null) {
+    moveToNextPlayer(game);
+    loopCount++;
+    if (loopCount >= game.players.length) {
+      const lastUnfinished = game.players.find((p) => p.rank === null);
+      if (lastUnfinished) {
+        lastUnfinished.rank = game.currentRank;
+        game.isStarted = false;
+        game.winner = game.players.find((p) => p.rank === 1);
+      }
+      break;
+    }
   }
 }
 

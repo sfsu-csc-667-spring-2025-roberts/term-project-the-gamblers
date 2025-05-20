@@ -283,6 +283,15 @@ function renderHand(cards) {
 }
 
 function playCard(card) {
+  // Check if it's the player's turn before attempting to play a card
+  const turnIndicator = document.getElementById("turn-indicator");
+  const isYourTurn = turnIndicator && turnIndicator.classList.contains("your-turn");
+  
+  if (!isYourTurn) {
+    alert("Wait for your turn!");
+    return;
+  }
+  
   let chosenColor = null;
   if (card.type === "wild" || card.type === "wild_draw4") {
     chosenColor = prompt("Choose a color: red, green, blue, yellow");

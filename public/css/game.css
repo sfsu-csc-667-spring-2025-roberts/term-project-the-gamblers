@@ -350,6 +350,32 @@
   box-shadow: var(--shadow-md);
 }
 
+
+.start-btn {
+  background: linear-gradient(90deg, #28a745 60%, #43e97b 100%);
+  color: #fff;
+  font-weight: 700;
+  border: 2px solid #1e7e34;
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.15);
+  letter-spacing: 1px;
+  font-size: 1.15rem;
+  padding-left: 1.5em;
+  position: relative;
+}
+
+
+.start-btn::before {
+  content: "";
+  display: none;
+}
+
+.start-btn:hover {
+  background: linear-gradient(90deg, #43e97b 60%, #38f9d7 100%);
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(40, 167, 69, 0.25);
+}
+
 .chat-section {
   background-color: white;
   border-radius: var(--radius-md);

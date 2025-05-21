@@ -161,18 +161,18 @@ window.socket.on("gameStateUpdate", (gameState) => {
           playerDiv.classList.add("active"); // highlight current player's turn
         }
 
+        let playerNameHTML = `<div class="player-name">${player.name}</div>`;
+
         // Create a flag indicator if player has said UNO
         if (player.hasSaidUNO) {
-          const unoIcon = document.createElement("span");
-          unoIcon.textContent = "UNO!";
-          unoIcon.style.color = "red";
-          playerDiv.classList.add("uno-flag");
-          //playerDiv.appendChild(unoIcon);
+          playerNameHTML += `<div class="uno-indicator">UNO!</div>`;
         }
+
+        playerNameHTML += `</div>`;
 
         playerDiv.innerHTML = `
           <div class="avatar-circle"></div>
-          <div class="player-name">${player.name}</div>
+          ${playerNameHTML}
           <div class="cards-count">${player.handSize} cards</div>
         `;
 

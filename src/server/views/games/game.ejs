@@ -11,12 +11,8 @@
         <script>
             window.gameId = "<%= gameId %>";
             window.userId = "<%= userId %>";
+            window.isHost = "<%= isHost %>" === "true";
             window.socket = io();
-
-            window.socket.emit("start-game", {
-                gameId: "<%= gameId %>",
-                playerIds: ["<%= userId %>"]
-            });
         </script>
 
         <script src="/js/chat.js" defer></script>
@@ -33,11 +29,17 @@
                     <span class="user-info">Welcome, <%= username %>!</span>
                 </div>
 
-                <div style="margin-bottom: 1.5em;">
+                <div style="margin-bottom: 1.5em; display: flex; gap: 1em;">
                     <button type="submit" class="btn" id="leave-game-btn"
                         style="background-color: var(--primary-color); color: #fff;">
                         &larr; Back to Lobby
                     </button>
+                    <% if (isHost) { %>
+                        <button type="button" class="btn" id="start-game-btn" 
+                            style="background-color: #28a745; color: #fff;">
+                            Start Game
+                        </button>
+                    <% } %>
                 </div>
 
                 <!-- Opponent Players Section -->

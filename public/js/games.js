@@ -15,6 +15,16 @@ document.getElementById("leave-game-btn").addEventListener("click", () => {
   });
 });
 
+const startGameBtn = document.getElementById("start-game-btn");
+if (startGameBtn && window.isHost) {
+  startGameBtn.addEventListener("click", () => {
+    console.log("Starting game...");
+    window.socket.emit("start-game", { gameId: window.gameId });
+    startGameBtn.disabled = true;
+    startGameBtn.textContent = "Game Started";
+  });
+}
+
 document.getElementById("draw-pile").addEventListener("click", () => {
   // Don't allow drawing if player has no cards
   const playerHand = document.getElementById("player-hand");
@@ -294,7 +304,8 @@ function renderHand(cards) {
 function playCard(card) {
   // Check if it's the player's turn before attempting to play a card
   const turnIndicator = document.getElementById("turn-indicator");
-  const isYourTurn = turnIndicator && turnIndicator.classList.contains("your-turn");
+  const isYourTurn =
+    turnIndicator && turnIndicator.classList.contains("your-turn");
 
   if (!isYourTurn) {
     alert("Wait for your turn!");
@@ -484,19 +495,19 @@ function showEndGameScreen(players) {
 
   // Automatically delete the game when the end game screen shows up
   fetch(`/games/${window.gameId}/end`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        console.error('Failed to end game automatically');
+        console.error("Failed to end game automatically");
       } else {
-        console.log('Game successfully ended and deleted');
+        console.log("Game successfully ended and deleted");
       }
     })
-    .catch(error => {
-      console.error('Error ending game:', error);
+    .catch((error) => {
+      console.error("Error ending game:", error);
     });
 }

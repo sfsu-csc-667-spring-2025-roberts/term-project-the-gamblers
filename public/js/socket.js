@@ -5,7 +5,7 @@ import {
   checkUNO,
   callUNO,
   addPlayer,
-  getNextPlayerIndex
+  getNextPlayerIndex,
 } from "../../src/server/logic/UNOgame.js";
 import db from "../../src/db/connection.js";
 
@@ -23,26 +23,32 @@ export default function initSocketIO(io, sessionMiddleware) {
   io.on("connection", (socket) => {
     // Get session data after the session middleware has been applied
     const session = socket.request.session;
-    
+
     if (!session) {
       console.log("Warning: No session data available for socket:", socket.id);
-      socket.emit("error", { message: "Session not available, please log in again" });
+      socket.emit("error", {
+        message: "Session not available, please log in again",
+      });
       return;
     }
 
     const username = session.username || "anonymous";
     const userId = session.userId || socket.id; // Fallback if no session userId
 
-    console.log(`User connected: ${socket.id} as ${username} (userId: ${userId})`);
-    console.log(`Session data:`, { 
+    console.log(
+      `User connected: ${socket.id} as ${username} (userId: ${userId})`,
+    );
+    console.log(`Session data:`, {
       sessionID: session.id,
-      username: session.username, 
-      userId: session.userId 
+      username: session.username,
+      userId: session.userId,
     });
 
     socket.on("join-game", (gameId) => {
       socket.join(gameId);
-      console.log(`Socket ${socket.id} joined room ${gameId} with userId: ${userId}`);
+      console.log(
+        `Socket ${socket.id} joined room ${gameId} with userId: ${userId}`,
+      );
       io.to(gameId).emit("chat:game", {
         username: "System",
         message: `${username} has joined the game.`,
@@ -57,23 +63,44 @@ export default function initSocketIO(io, sessionMiddleware) {
       }
     });
 
-    socket.on("start-game", async ({ gameId, playerIds }) => {
+    socket.on("start-game", async ({ gameId }) => {
       if (activeGames.has(gameId)) {
         return socket.emit("error", { message: "Game already started" });
       }
 
       try {
-        const { rows: players } = await db.query(
-          "SELECT id, username FROM users WHERE id = ANY($1::int[])",
-          [playerIds],
+        const { rows: gamePlayers } = await db.query(
+          `SELECT u.id, u.username 
+           FROM game_players gp 
+           JOIN users u ON gp.user_id = u.id 
+           WHERE gp.game_id = $1`,
+          [gameId],
         );
 
-        const game = new UNOGame(gameId, players);
-        await game.initialize();
+        if (gamePlayers.length < 2) {
+          return socket.emit("error", {
+            message: "Need at least 2 players to start the game",
+          });
+        }
 
+        const game = new UNOGame(gameId, gamePlayers);
+        await game.initialize();
         activeGames.set(gameId, game);
-        // io.to(gameId).emit("gameStateUpdate", game);
-        socket.emit("player-state", game.getPlayerState(userId));
+
+        io.to(gameId).emit("gameStateUpdate", game.getGameState());
+
+        gamePlayers.forEach((player) => {
+          io.of("/").sockets.forEach((s) => {
+            if (s.request.session.userId == player.id) {
+              s.emit("player-state", game.getPlayerState(player.id));
+            }
+          });
+        });
+
+        io.to(gameId).emit("chat:game", {
+          username: "System",
+          message: "The game has started! Good luck everyone!",
+        });
       } catch (error) {
         console.error("Error starting game:", error);
         socket.emit("error", { message: "Failed to start game." });
@@ -94,7 +121,7 @@ export default function initSocketIO(io, sessionMiddleware) {
           const nextPlayerIndex = getNextPlayerIndex(
             previousPlayerIndex,
             game.direction,
-            game.players.length
+            game.players.length,
           );
           console.log("Next player index:", nextPlayerIndex);
           const nextPlayer = game.players[nextPlayerIndex];
@@ -135,7 +162,7 @@ export default function initSocketIO(io, sessionMiddleware) {
       if (player) {
         const result = callUNO(game, player);
 
-        if(result?.success) {
+        if (result?.success) {
           socket.emit("player-state", game.getPlayerState(userId));
           io.to(gameId).emit("gameStateUpdate", game.getGameState());
         } else {
@@ -173,7 +200,9 @@ export default function initSocketIO(io, sessionMiddleware) {
     });
 
     socket.on("disconnect", () => {
-      console.log(`User disconnected: ${socket.id} (userId: ${userId}, username: ${username})`);
+      console.log(
+        `User disconnected: ${socket.id} (userId: ${userId}, username: ${username})`,
+      );
     });
   });
 }

@@ -78,12 +78,10 @@ router.post("/:gameId/join", async (req, res) => {
     const { password } = req.body;
 
     if (!userId) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "You must be logged in to join a game",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "You must be logged in to join a game",
+      });
     }
 
     // Fetch the game to check if it exists
@@ -104,12 +102,10 @@ router.post("/:gameId/join", async (req, res) => {
         [gameId, userId],
       );
       if (alreadyJoined.rows.length > 0) {
-        return res
-          .status(409)
-          .json({
-            success: false,
-            message: "You have already joined this game",
-          });
+        return res.status(409).json({
+          success: false,
+          message: "You have already joined this game",
+        });
       }
       const playerCount = await db.query(
         "SELECT COUNT(*) FROM game_players WHERE game_id = $1",

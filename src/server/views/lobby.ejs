@@ -7,6 +7,7 @@
     <script src="/js/lobby.js" defer></script>
     <!-- <script src="/socket.io/socket.io.js" defer></script> -->
     <script src="/js/chat.js" defer></script>
+    <script src="/js/onlinePlayers.js" defer></script>
     <link rel="stylesheet" href="/css/lobby.css">
     <style>
       .chat-section {
@@ -128,13 +129,8 @@
 
       <div class="online-players">
         <h3>Online Players</h3>
-        <div class="players-count">12 Players Online</div>
-        <div class="players-list">
-          <div class="player">Player1</div>
-          <div class="player">CardMaster99</div>
-          <div class="player">UnoChamp</div>
-          <div class="player">DrawFour</div>
-          <div class="player">WildCard</div>
+        <div class="players-count"><span id="online-count">0</span> Players Online</div>
+        <div class="players-list" id="online-players-list">
         </div>
       </div>
 

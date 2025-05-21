@@ -180,16 +180,16 @@ export function drawCard(game, playerId) {
     game.discardPile = [topCard];
   }
 
-  if(player.hand.length !== 1){
-      player.hasSaidUNO = false;
-    }
+  if (player.hand.length !== 1) {
+    player.hasSaidUNO = false;
+  }
 
   moveToNextPlayer(game);
   // Skip players who have already finished
   while (game.getCurrentPlayer().rank !== null) {
     moveToNextPlayer(game);
   }
-  
+
   return card;
 }
 
@@ -226,9 +226,9 @@ export function playCard(game, playerId, card) {
     }
   }
 
-  if(player.hand.length !== 1){
-      player.hasSaidUNO = false;
-    }
+  if (player.hand.length !== 1) {
+    player.hasSaidUNO = false;
+  }
 
   applyCardEffect(game, playedCard);
 
@@ -345,14 +345,15 @@ function giveCardsToNextPlayer(game, count) {
 }
 
 export function callUNO(game, player) {
-  if(!player || !game) return { success: false, message: "Invalid player or game" };
+  if (!player || !game)
+    return { success: false, message: "Invalid player or game" };
 
   const actualPlayer = game.players.find((p) => p.id === player.id);
   if (!actualPlayer) {
     return { success: false, message: "Player not found in game" };
   }
 
-  if(actualPlayer.hand.length === 1 && !actualPlayer.hasSaidUNO) {
+  if (actualPlayer.hand.length === 1 && !actualPlayer.hasSaidUNO) {
     actualPlayer.hasSaidUNO = true;
     return { success: true, message: "UNO called successfully" };
   }

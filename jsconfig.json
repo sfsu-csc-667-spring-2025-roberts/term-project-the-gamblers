@@ -5,6 +5,5 @@
     "moduleResolution": "node",
     "target": "ES6",
     "resolveJsonModule": true
-
   }
 }

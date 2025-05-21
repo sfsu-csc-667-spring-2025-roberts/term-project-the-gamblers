@@ -10,6 +10,7 @@ import {
 import db from "../../src/db/connection.js";
 
 const activeGames = new Map(); // Map of gameId -> UNOGame instance
+const onlineUsers = new Map();
 
 export default function initSocketIO(io, sessionMiddleware) {
   // Wrap session middleware for socket.io
@@ -34,6 +35,15 @@ export default function initSocketIO(io, sessionMiddleware) {
 
     const username = session.username || "anonymous";
     const userId = session.userId || socket.id; // Fallback if no session userId
+
+    // Add user to online users
+    onlineUsers.set(userId, { username, socketId: socket.id });
+
+    io.emit("online_users_update", Array.from(onlineUsers.values()));
+
+    socket.on("get_online_users", () => {
+      socket.emit("online_users_update", Array.from(onlineUsers.values()));
+    });
 
     console.log(
       `User connected: ${socket.id} as ${username} (userId: ${userId})`,
@@ -203,6 +213,10 @@ export default function initSocketIO(io, sessionMiddleware) {
       console.log(
         `User disconnected: ${socket.id} (userId: ${userId}, username: ${username})`,
       );
+
+      onlineUsers.delete(userId);
+
+      io.emit("online_users_update", Array.from(onlineUsers.values()));
     });
   });
 }

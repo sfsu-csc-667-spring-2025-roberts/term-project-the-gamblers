@@ -122,16 +122,20 @@
   left: 0;
   right: 0;
   height: 6px;
-  background: linear-gradient(90deg,
-      var(--primary-color),
-      var(--secondary-color),
-      var(--accent-color));
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color),
+    var(--accent-color)
+  );
 }
 
 #turn-indicator {
-  background: linear-gradient(to right,
-      var(--accent-color),
-      var(--accent-light));
+  background: linear-gradient(
+    to right,
+    var(--accent-color),
+    var(--accent-light)
+  );
   color: white;
   padding: 12px 25px;
   border-radius: 25px;
@@ -310,9 +314,11 @@
 }
 
 .btn {
-  background: linear-gradient(to right,
-      var(--secondary-color),
-      var(--secondary-light));
+  background: linear-gradient(
+    to right,
+    var(--secondary-color),
+    var(--secondary-light)
+  );
   border: none;
   border-radius: var(--radius-sm);
   padding: 12px 24px;
@@ -335,13 +341,14 @@
 }
 
 .btn:hover {
-  background: linear-gradient(to right,
-      var(--secondary-light),
-      var(--secondary-color));
+  background: linear-gradient(
+    to right,
+    var(--secondary-light),
+    var(--secondary-color)
+  );
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
 }
-
 
 .start-btn {
   background: linear-gradient(90deg, #28a745 60%, #43e97b 100%);
@@ -354,7 +361,6 @@
   padding-left: 1.5em;
   position: relative;
 }
-
 
 .start-btn::before {
   content: "";
@@ -621,7 +627,8 @@
 }
 
 .card-back {
-  background: url("data:image/svg+xml;utf8,<svg width='300' height='450' viewBox='0 0 300 450' xmlns='http://www.w3.org/2000/svg'><rect width='300' height='450' rx='30' ry='30' fill='%23DA1A28' stroke='black' stroke-width='4'/><ellipse cx='150' cy='225' rx='150' ry='90' transform='rotate(-25 150 225)' fill='black'/><ellipse cx='150' cy='225' rx='135' ry='75' transform='rotate(-25 150 225)' fill='none' stroke='white' stroke-width='6'/><text x='150' y='240' font-family='Arial Black, sans-serif' font-size='70' fill='%23FFD700' stroke='white' stroke-width='4' text-anchor='middle' dominant-baseline='middle' transform='rotate(-25 150 225)'>UNO</text></svg>") center/cover no-repeat;
+  background: url("data:image/svg+xml;utf8,<svg width='300' height='450' viewBox='0 0 300 450' xmlns='http://www.w3.org/2000/svg'><rect width='300' height='450' rx='30' ry='30' fill='%23DA1A28' stroke='black' stroke-width='4'/><ellipse cx='150' cy='225' rx='150' ry='90' transform='rotate(-25 150 225)' fill='black'/><ellipse cx='150' cy='225' rx='135' ry='75' transform='rotate(-25 150 225)' fill='none' stroke='white' stroke-width='6'/><text x='150' y='240' font-family='Arial Black, sans-serif' font-size='70' fill='%23FFD700' stroke='white' stroke-width='4' text-anchor='middle' dominant-baseline='middle' transform='rotate(-25 150 225)'>UNO</text></svg>")
+    center/cover no-repeat;
 }
 
 #draw-pile-count {

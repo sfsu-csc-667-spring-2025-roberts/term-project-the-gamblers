@@ -527,7 +527,7 @@ body {
 
 .players-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 10px;
   max-height: 200px;
   overflow-y: auto;
@@ -544,6 +544,11 @@ body {
   text-overflow: ellipsis;
   transition: var(--transition);
   border: 1px solid var(--border-color);
+  min-width: 120px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .player:hover {

@@ -7,7 +7,7 @@ Welcome to our **UNO Online Multiplayer** game! This web-based game allows users
 - 👤 **Igor Tello - itello@sfsu.edu**
 - 👤 **Tushin Kulshreshtha - tkulshreshtha@sfsu.edu**
 - 👤 **Jacob Lazzarini**
-- 👤 **Kyle Nguyen**
+- 👤 **Kyle Nguyen - knguyen68@sfsu.edu**
 
 ## ✨ Features
 

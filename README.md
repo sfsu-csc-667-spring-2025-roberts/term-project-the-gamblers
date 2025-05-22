@@ -32,7 +32,7 @@ Welcome to our **UNO Online Multiplayer** game! This web-based game allows users
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-repo/uno-online.git
+git clone https://github.com/sfsu-csc-667-spring-2025-roberts/term-project-the-gamblers.git
 cd uno-online
 ```
 

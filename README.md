@@ -36,10 +36,10 @@ git clone https://github.com/sfsu-csc-667-spring-2025-roberts/term-project-the-g
 cd term-project-the-gamblers
 ```
 
-2. Install Dependencies:
+2. Install Dependencies, found in package.json file:
 
 ```bash
-npm install
+npm install (dependency)
 ```
 
 3. Set up the database:
